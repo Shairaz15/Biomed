@@ -20,7 +20,14 @@ type Phase = "instructions" | "permission" | "warmup" | "assessment" | "processi
 const PROMPTS = [
     "Describe what you did yesterday in as much detail as possible.",
     "Describe a place you visit often and why you like it.",
-    "Talk about a normal day for you, from morning to night."
+    "Talk about a normal day for you, from morning to night.",
+    "Explain how to make your favorite meal.",
+    "Describe your childhood home.",
+    "Talk about a recent book or movie you enjoyed.",
+    "Describe your favorite season and why you like it.",
+    "Explain the rules of a game or sport you know.",
+    "Talk about a memorable trip you have taken.",
+    "Describe a person who has influenced your life."
 ];
 
 export function LanguageAssessment() {
@@ -39,6 +46,14 @@ export function LanguageAssessment() {
     const recognitionRef = useRef<any>(null);
     const startTimeRef = useRef<number>(0);
     const intervalRef = useRef<any>(null);
+    const transcriptEndRef = useRef<HTMLDivElement>(null);
+
+    // Scroll to bottom of transcript
+    useEffect(() => {
+        if (transcriptEndRef.current) {
+            transcriptEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [transcript]);
 
     // Select random prompt on mount
     useEffect(() => {
@@ -72,20 +87,13 @@ export function LanguageAssessment() {
         recognition.lang = 'en-US';
 
         recognition.onresult = (event: any) => {
-            let finalTranscript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript + ' ';
-                }
+            // Reconstruct full transcript from all results
+            // This handles both final and interim results properly
+            let fullTranscript = '';
+            for (let i = 0; i < event.results.length; ++i) {
+                fullTranscript += event.results[i][0].transcript;
             }
-            // Append to existing if needed, but here we just grab full session usually
-            // Ideally we track full transcript.
-            // Simplified: Just use the latest final + interim
-            const current = Array.from(event.results)
-                .map((r: any) => r[0].transcript)
-                .join('');
-
-            setTranscript(current);
+            setTranscript(fullTranscript);
         };
 
         recognition.onerror = (event: any) => {
@@ -99,6 +107,11 @@ export function LanguageAssessment() {
     };
 
     const stopRecording = () => {
+        if (timer < 15 && phase === 'assessment') {
+            const confirmStop = window.confirm("Ideally we need 15 seconds of speech for accurate analysis. Are you sure you want to stop?");
+            if (!confirmStop) return;
+        }
+
         if (recognitionRef.current) {
             recognitionRef.current.stop();
         }
@@ -141,6 +154,26 @@ export function LanguageAssessment() {
         setTimeout(() => setPhase('complete'), 1500);
     };
 
+    const getInsights = (res: LanguageAssessmentResult) => {
+        const insights = [];
+        const { wpm, fluencyIndex, hesitationIndex, lexicalDiversity } = res.derivedFeatures;
+
+        if (fluencyIndex > 80) insights.push({ text: "Excellent Fluency", type: "positive" });
+        else if (fluencyIndex > 60) insights.push({ text: "Good Fluency", type: "positive" });
+        else insights.push({ text: "Reduced Fluency", type: "attention" });
+
+        if (wpm > 130) insights.push({ text: "Fast Pace", type: "neutral" });
+        else if (wpm < 100) insights.push({ text: "Slower Pace", type: "neutral" });
+        else insights.push({ text: "Steady Pace", type: "positive" });
+
+        if (hesitationIndex < 0.05) insights.push({ text: "Consistent Flow", type: "positive" });
+        else if (hesitationIndex > 0.15) insights.push({ text: "Frequent Pauses", type: "attention" });
+
+        if (lexicalDiversity > 0.6) insights.push({ text: "Rich Vocabulary", type: "positive" });
+
+        return insights;
+    };
+
     return (
         <PageWrapper>
             <div className="language-container center-content" style={{ color: 'white', position: 'relative', zIndex: 5 }}>
@@ -156,7 +189,7 @@ export function LanguageAssessment() {
 
                         <ul className="instructions-list">
                             <li>You will be given a simple topic to discuss.</li>
-                            <li>Speak naturally for about 30-60 seconds.</li>
+                            <li>Speak naturally for at least 30 seconds.</li>
                             <li>Try to provide as much detail as possible.</li>
                         </ul>
 
@@ -203,8 +236,25 @@ export function LanguageAssessment() {
                         <h2>{prompt}</h2>
                         <div className="timer">{timer}s</div>
 
-                        <div className="visualizer-placeholder">
-                            {isRecording ? "Listening..." : "Ready"}
+                        {/* Visualizer Animation */}
+                        <div className="visualizer-container">
+                            {isRecording ? (
+                                <>
+                                    <div className="visual-bar"></div>
+                                    <div className="visual-bar"></div>
+                                    <div className="visual-bar"></div>
+                                    <div className="visual-bar"></div>
+                                    <div className="visual-bar"></div>
+                                </>
+                            ) : (
+                                <div className="text-secondary">Ready to record</div>
+                            )}
+                        </div>
+
+                        {/* Live Transcript Display */}
+                        <div className="transcript-box">
+                            {transcript || <span className="transcript-placeholder">Your speech will appear here...</span>}
+                            <div ref={transcriptEndRef} />
                         </div>
 
                         <div className="controls">
@@ -214,6 +264,7 @@ export function LanguageAssessment() {
                                 <Button onClick={stopRecording} variant="secondary" className="stop-btn">Finish Recording</Button>
                             )}
                         </div>
+                        {isRecording && timer < 15 && <p className="text-xs text-secondary mt-2">Try to speak for at least 15 seconds</p>}
                     </Card>
                 )}
 
@@ -241,6 +292,16 @@ export function LanguageAssessment() {
                                 <p className="value">{(result.derivedFeatures.hesitationIndex * 100).toFixed(1)}%</p>
                             </div>
                         </div>
+
+                        {/* Insight Chips */}
+                        <div className="insights-grid">
+                            {getInsights(result).map((insight, i) => (
+                                <span key={i} className={`insight-chip ${insight.type}`}>
+                                    {insight.text}
+                                </span>
+                            ))}
+                        </div>
+
                         <Button onClick={() => navigate('/dashboard')} className="w-full mt-4">View Dashboard Trends</Button>
                     </Card>
                 )}
