@@ -15,6 +15,7 @@ import { useMemoryResults, usePatternResults, useLanguageResults } from "../hook
 import { analyzeTrends } from "../ai/trendAnalyzer";
 import { detectAnomalies, createBaseline } from "../ai/anomalyDetector";
 import { computeRisk } from "../ai/riskEngine";
+import { predictTrend, TrendPrediction } from "../ml";
 import type { ReactionTestResult } from "../components/tests/reaction/reactionFeatures";
 import "./Dashboard.css";
 
@@ -29,6 +30,9 @@ export function Dashboard() {
     const { results: memoryResults } = useMemoryResults();
     const { results: patternResults } = usePatternResults();
     const { results: languageResults } = useLanguageResults();
+
+    // ML Prediction State
+    const [mlPrediction, setMlPrediction] = useState<TrendPrediction | null>(null);
 
     useEffect(() => {
         try {
@@ -60,6 +64,20 @@ export function Dashboard() {
     const sessions = DEMO_SESSIONS;
     const sessionDataPoints = getDemoSessionDataPoints();
 
+    // Fetch ML Prediction (Async)
+    useEffect(() => {
+        let mounted = true;
+        async function fetchML() {
+            if (sessions.length >= 3) {
+                const pred = await predictTrend(sessionDataPoints);
+                if (mounted) setMlPrediction(pred);
+            }
+        }
+        if (showDemoData) fetchML();
+
+        return () => { mounted = false; };
+    }, [sessions, sessionDataPoints, showDemoData]);
+
     // Calculate risk analysis from demo data
     const riskAnalysis = useMemo(() => {
         if (sessions.length < 2) return null;
@@ -70,8 +88,8 @@ export function Dashboard() {
         const slopes = analyzeTrends(sessionDataPoints);
         const anomaly = detectAnomalies(latestFeatures, allFeatures.slice(0, -1));
 
-        return computeRisk(latestFeatures, baseline, slopes, anomaly);
-    }, [sessions, sessionDataPoints]);
+        return computeRisk(latestFeatures, baseline, slopes, anomaly, mlPrediction);
+    }, [sessions, sessionDataPoints, mlPrediction]);
 
     // Prepare chart data for demo sessions
     const demoChartData = sessions.map((session, index) => ({
@@ -219,6 +237,48 @@ export function Dashboard() {
                                 </div>
                             </div>
                         )}
+                    </Card>
+                )}
+
+                {/* ML Insight Card (Only if high confidence) */}
+                {riskAnalysis?.mlPrediction && riskAnalysis.mlPrediction.confidence > 0.6 && (
+                    <Card className="ml-insight-card animate-fadeIn" style={{ borderLeft: '4px solid #8b5cf6' }}>
+                        <CardHeader
+                            title="ML Trend Analysis"
+                            subtitle="Probabilistic pattern estimation (Beta)"
+                        />
+                        <CardContent>
+                            <div className="ml-insight-grid">
+                                <div className="ml-metric">
+                                    <span className="label">Trend Direction</span>
+                                    <div className="value-row">
+                                        <span className={`direction-icon ${riskAnalysis.mlPrediction.direction}`}>
+                                            {riskAnalysis.mlPrediction.direction === 'improving' ? '↗' :
+                                                riskAnalysis.mlPrediction.direction === 'declining' ? '↘' : '↔'}
+                                        </span>
+                                        <span className="direction-text">
+                                            {riskAnalysis.mlPrediction.direction.charAt(0).toUpperCase() + riskAnalysis.mlPrediction.direction.slice(1)}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="ml-metric">
+                                    <span className="label">Model Confidence</span>
+                                    <div className="confidence-meter">
+                                        <div
+                                            className="confidence-fill"
+                                            style={{ width: `${Math.round(riskAnalysis.mlPrediction.confidence * 100)}%` }}
+                                        />
+                                    </div>
+                                    <span className="confidence-text">{Math.round(riskAnalysis.mlPrediction.confidence * 100)}%</span>
+                                </div>
+                            </div>
+                            <div className="ml-disclaimer">
+                                <small>
+                                    ℹ️ ML insights are probabilistic estimates based on your previous 6 sessions.
+                                    They do not constitute a medical diagnosis.
+                                </small>
+                            </div>
+                        </CardContent>
                     </Card>
                 )}
 

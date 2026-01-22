@@ -9,6 +9,7 @@ import type { AnomalyResult, BaselineVector } from "./anomalyDetector";
 import type { ExtractedFeatures } from "./featureExtractor";
 import type { RiskLevel } from "../ethics/messagingRules";
 import { RISK_MESSAGES, RISK_LABELS } from "../ethics/messagingRules";
+import type { TrendPrediction } from "../ml/types";
 
 export interface RiskAnalysis {
     riskLevel: RiskLevel;
@@ -18,6 +19,7 @@ export interface RiskAnalysis {
     anomalyScore: number; // 0-1
     explanation: string;
     topFactors: string[];
+    mlPrediction?: TrendPrediction;
 }
 
 export interface DeltaVector {
@@ -94,42 +96,75 @@ export function computeRisk(
     current: ExtractedFeatures,
     baseline: BaselineVector,
     slopes: TrendSlopes,
-    anomaly: AnomalyResult
+    anomaly: AnomalyResult,
+    mlResult?: TrendPrediction | null
 ): RiskAnalysis {
     const delta = computeDelta(current, baseline);
 
-    // Count negative signals
+    // Count negative signals (Rule-Based)
     let negativeSignals = 0;
-    let totalSignalStrength = 0;
+    let ruleSignalStrength = 0;
 
     // Delta signals
-    if (delta.memoryDelta < -0.1) { negativeSignals++; totalSignalStrength += Math.abs(delta.memoryDelta); }
-    if (delta.reactionDelta < -50) { negativeSignals++; totalSignalStrength += Math.abs(delta.reactionDelta) / 200; }
-    if (delta.patternDelta < -0.1) { negativeSignals++; totalSignalStrength += Math.abs(delta.patternDelta); }
-    if (delta.speechDelta < -0.1) { negativeSignals++; totalSignalStrength += Math.abs(delta.speechDelta); }
+    if (delta.memoryDelta < -0.1) { negativeSignals++; ruleSignalStrength += Math.abs(delta.memoryDelta); }
+    if (delta.reactionDelta < -50) { negativeSignals++; ruleSignalStrength += Math.abs(delta.reactionDelta) / 200; }
+    if (delta.patternDelta < -0.1) { negativeSignals++; ruleSignalStrength += Math.abs(delta.patternDelta); }
+    if (delta.speechDelta < -0.1) { negativeSignals++; ruleSignalStrength += Math.abs(delta.speechDelta); }
 
     // Trend signals
     const avgSlope = (slopes.memoryTrendSlope + slopes.reactionTrendSlope + slopes.patternTrendSlope + slopes.languageTrendSlope) / 4;
-    if (avgSlope < -0.0005) { negativeSignals++; totalSignalStrength += Math.abs(avgSlope) * 100; }
+    if (avgSlope < -0.0005) { negativeSignals++; ruleSignalStrength += Math.abs(avgSlope) * 100; }
 
     // Anomaly signal
-    if (anomaly.isAnomaly) { negativeSignals++; totalSignalStrength += anomaly.anomalyScore; }
+    if (anomaly.isAnomaly) { negativeSignals++; ruleSignalStrength += anomaly.anomalyScore; }
 
-    // Determine risk level based on signal count
-    let riskLevel: RiskLevel;
-    if (negativeSignals >= 4) {
-        riskLevel = "possible_risk";
-    } else if (negativeSignals >= 2) {
-        riskLevel = "change_detected";
-    } else {
-        riskLevel = "stable";
+    // Rule-Based Risk Score (0-1 approx)
+    let ruleRiskScore = 0;
+    if (negativeSignals >= 4) ruleRiskScore = 0.8;
+    else if (negativeSignals >= 2) ruleRiskScore = 0.5;
+    else ruleRiskScore = 0.1;
+
+    // --- ENSEMBLE LOGIC ---
+    let finalRiskScore = ruleRiskScore;
+    let factors = identifyTopFactors(delta, slopes, anomaly);
+    let confidence = Math.min(ruleSignalStrength / 2, 1);
+
+    if (mlResult && mlResult.confidence >= 0.7 && mlResult.reliabilityFlag !== 'low') {
+        const mlWeight = mlResult.confidence * 0.5; // Max 50%
+        const ruleWeight = 1 - mlWeight;
+
+        // Map ML direction to rough risk score
+        let mlRiskContribution = 0;
+        if (mlResult.direction === 'declining') mlRiskContribution = 0.8;
+        else if (mlResult.direction === 'stable') mlRiskContribution = 0.2;
+        else mlRiskContribution = 0.0;
+
+        finalRiskScore = (ruleRiskScore * ruleWeight) + (mlRiskContribution * mlWeight);
+
+        // Boost confidence if ML agrees with rules
+        confidence = Math.min(1, confidence + 0.1);
+
+        // Add ML factors
+        if (mlResult.domainContributions) {
+            Object.entries(mlResult.domainContributions)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 1) // Top ML factor
+                .forEach(([domain]) => {
+                    if (!factors.includes(`${domain} (ML detected)`)) {
+                        factors.push(`${domain} (ML trend)`);
+                    }
+                });
+        }
     }
 
-    // Calculate confidence based on data quality (signal strength)
-    const riskConfidenceScore = Math.min(totalSignalStrength / 2, 1);
+    // Determine final level
+    let riskLevel: RiskLevel;
+    if (finalRiskScore > 0.6) riskLevel = "possible_risk";
+    else if (finalRiskScore > 0.3) riskLevel = "change_detected";
+    else riskLevel = "stable";
 
-    // Identify contributing factors
-    const topFactors = identifyTopFactors(delta, slopes, anomaly);
+    // Re-verify tops factors are limited
+    const topFactors = factors.slice(0, 3);
 
     // Generate explanation
     let explanation = "";
@@ -143,9 +178,10 @@ export function computeRisk(
         riskLevel,
         riskLabel: RISK_LABELS[riskLevel],
         riskMessage: RISK_MESSAGES[riskLevel],
-        riskConfidenceScore,
+        riskConfidenceScore: confidence,
         anomalyScore: anomaly.anomalyScore,
         explanation,
         topFactors,
+        mlPrediction: mlResult || undefined
     };
 }

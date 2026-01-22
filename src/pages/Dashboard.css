@@ -258,6 +258,103 @@
     justify-content: center;
 }
 
+
+/* ML Insight Card */
+.ml-insight-card {
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.ml-insight-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #8b5cf6;
+}
+
+.ml-insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.ml-metric .label {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.ml-metric .value-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.direction-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.direction-icon.improving {
+    background: rgba(52, 211, 153, 0.2);
+    color: #34d399;
+}
+
+.direction-icon.declining {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+}
+
+.direction-icon.stable {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+}
+
+.direction-text {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #f1f5f9;
+}
+
+.confidence-meter {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b5cf6, #c084fc);
+    transition: width 0.5s ease-out;
+}
+
+.confidence-text {
+    font-size: 0.875rem;
+    color: #cbd5e1;
+}
+
+.ml-disclaimer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    color: #64748b;
+    font-style: italic;
+    font-size: 0.75rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .dashboard-header {
