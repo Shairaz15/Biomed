@@ -95,10 +95,11 @@ export function Dashboard() {
         const sortedDates = Array.from(allDates).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
         return sortedDates.map((dateStr, index) => {
-            const reaction = reactionResults.find(r => new Date(r.timestamp).toDateString() === dateStr);
-            const memory = memoryResults.find(m => new Date(m.timestamp).toDateString() === dateStr);
-            const pattern = patternResults.find(p => new Date(p.timestamp).toDateString() === dateStr);
-            const language = languageResults.find(l => new Date(l.timestamp).toDateString() === dateStr);
+            // Find the *latest* result for this date (since arrays are appended, reverse search or filter+pop)
+            const reaction = reactionResults.filter(r => new Date(r.timestamp).toDateString() === dateStr).pop();
+            const memory = memoryResults.filter(m => new Date(m.timestamp).toDateString() === dateStr).pop();
+            const pattern = patternResults.filter(p => new Date(p.timestamp).toDateString() === dateStr).pop();
+            const language = languageResults.filter(l => new Date(l.timestamp).toDateString() === dateStr).pop();
 
             // Normalized Pattern Score: Max Level * 10 (e.g. Lvl 5 = 50%, Lvl 10=100%)
             const patternScore = pattern ? Math.min(pattern.metrics.maxLevelReached * 10, 100) : null;
