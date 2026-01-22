@@ -17,12 +17,15 @@
 .permission-card,
 .phase-card,
 .results-card {
-    background: rgba(30, 41, 59, 0.7);
+    background: rgba(30, 41, 59, 0.95) !important;
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 2.5rem;
     border-radius: 16px;
     width: 100%;
+    z-index: 10;
+    position: relative;
+    color: #fff;
 }
 
 .privacy-notice {

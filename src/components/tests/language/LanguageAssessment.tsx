@@ -143,7 +143,7 @@ export function LanguageAssessment() {
 
     return (
         <PageWrapper>
-            <div className="language-container center-content">
+            <div className="language-container center-content" style={{ color: 'white', position: 'relative', zIndex: 5 }}>
                 {phase === 'instructions' && (
                     <Card className="intro-card">
                         <h1>Language Fluency Assessment</h1>

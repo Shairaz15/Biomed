@@ -15,7 +15,7 @@ function App() {
         <Route path="/test/memory" element={<MemoryAssessment />} />
         <Route path="/test/reaction" element={<ReactionTimeTest />} />
         <Route path="/tests/pattern" element={<PatternAssessment />} />
-        <Route path="/tests/language" element={<LanguageAssessment />} />
+        <Route path="/test/language" element={<LanguageAssessment />} />
       </Routes>
     </BrowserRouter>
   );
