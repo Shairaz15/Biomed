@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Landing, Dashboard, Tests } from "./pages";
+import { Landing, Dashboard, Tests, MemoryAssessment } from "./pages";
 import "./index.css";
 
 function App() {
@@ -9,6 +9,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tests" element={<Tests />} />
+        <Route path="/test/memory" element={<MemoryAssessment />} />
       </Routes>
     </BrowserRouter>
   );
