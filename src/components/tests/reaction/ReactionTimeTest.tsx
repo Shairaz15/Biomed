@@ -10,6 +10,7 @@ import {
     STATE_MESSAGES,
 } from "./reactionLogic";
 import { createReactionTestResult } from "./reactionFeatures";
+import { getReactionFeedback } from "../../../utils/normativeStats";
 import "./ReactionTimeTest.css";
 
 export function ReactionTimeTest() {
@@ -249,17 +250,30 @@ export function ReactionTimeTest() {
                 {state === "test_complete" && (
                     <div className="reaction-complete">
                         <h2>Assessment Complete</h2>
+
                         <div className="result-summary">
                             <div className="result-item">
-                                <span className="result-label">Rounds</span>
-                                <span className="result-value">{rounds.filter((r) => !r.isCalibration).length}</span>
-                            </div>
-                            <div className="result-item">
-                                <span className="result-label">Valid Responses</span>
+                                <span className="result-label">Average Time</span>
                                 <span className="result-value">
-                                    {rounds.filter((r) => !r.isCalibration && !r.isFalseStart && !r.isTimeout).length}
+                                    {Math.round(rounds.filter((r) => !r.isCalibration && !r.isFalseStart && !r.isTimeout)
+                                        .reduce((a, b) => a + (b.reactionTime || 0), 0) /
+                                        rounds.filter((r) => !r.isCalibration && !r.isFalseStart && !r.isTimeout).length)} ms
                                 </span>
                             </div>
+
+                            {/* New Feedback Section */}
+                            {(() => {
+                                const validRounds = rounds.filter((r) => !r.isCalibration && !r.isFalseStart && !r.isTimeout);
+                                const avgTime = validRounds.reduce((a, b) => a + (b.reactionTime || 0), 0) / validRounds.length;
+                                const feedback = getReactionFeedback(avgTime);
+
+                                return (
+                                    <div className={`feedback-badge ${feedback.color}`}>
+                                        <span className="feedback-category">{feedback.category}</span>
+                                        <p className="feedback-message">{feedback.message}</p>
+                                    </div>
+                                );
+                            })()}
                         </div>
                         <Button variant="primary" size="lg" onClick={handleFinish}>
                             View Results

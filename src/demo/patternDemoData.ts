@@ -13,10 +13,10 @@ export const STABLE_LEARNER_DATA: PatternAssessmentResult[] = Array.from({ lengt
     sessionId: `session-stable-${i}`,
     timestamp: daysAgo(20 - i * 5), // Every 5 days
     metrics: {
-        maxLevelReached: 5 + i, // 5, 6, 7, 8, 9
+        maxLevelReached: 6 + (i % 2), // Levels 6-7 (Span ~5.5 items - Healthy Adult)
         totalRounds: 10 + i,
         correctRounds: 9 + i,
-        averageResponseLatency: 800 - (i * 50), // Gets faster: 800 -> 600
+        averageResponseLatency: 800 - (i * 20), // Stable speed
         averageCompletionTime: 4000,
         inputErrors: 1,
         falseInputs: 0,
@@ -38,12 +38,12 @@ export const DECLINING_DATA: PatternAssessmentResult[] = Array.from({ length: 5 
     sessionId: `session-decline-${i}`,
     timestamp: daysAgo(20 - i * 5),
     metrics: {
-        maxLevelReached: 6 - i, // 6, 5, 4, 3, 2
+        maxLevelReached: Math.max(2, 6 - i), // Drops from 6 to 2 (Span ~3.6 items - Older Adult)
         totalRounds: 8,
         correctRounds: 6 - i,
-        averageResponseLatency: 900 + (i * 100), // Gets slower: 900 -> 1300
+        averageResponseLatency: 900 + (i * 100), // Gets slower
         averageCompletionTime: 5000 + (i * 500),
-        inputErrors: 2 + i * 2, // Errors increase
+        inputErrors: 2 + i * 2,
         falseInputs: i,
         retries: i
     },

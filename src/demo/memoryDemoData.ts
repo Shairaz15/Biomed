@@ -9,24 +9,24 @@ import type { MemoryFeatures } from '../types/memoryTypes';
  * Demo feature profiles for different patterns.
  */
 export const MEMORY_DEMO_PROFILES = {
-    // Stable recall - consistent 80-85% accuracy
+    // Stable recall - Healthy Adult Norms (~6/10)
     stable: [
-        { recallAccuracy: 0.85, intrusionRate: 0.05, forgettingRate: 0.15, recallConsistency: 0.95, latencyIndex: 0.35 },
-        { recallAccuracy: 0.82, intrusionRate: 0.06, forgettingRate: 0.18, recallConsistency: 0.92, latencyIndex: 0.38 },
-        { recallAccuracy: 0.84, intrusionRate: 0.04, forgettingRate: 0.16, recallConsistency: 0.94, latencyIndex: 0.33 },
-        { recallAccuracy: 0.83, intrusionRate: 0.05, forgettingRate: 0.17, recallConsistency: 0.93, latencyIndex: 0.36 },
-        { recallAccuracy: 0.85, intrusionRate: 0.05, forgettingRate: 0.15, recallConsistency: 0.95, latencyIndex: 0.34 },
-        { recallAccuracy: 0.84, intrusionRate: 0.04, forgettingRate: 0.16, recallConsistency: 0.94, latencyIndex: 0.35 },
+        { recallAccuracy: 0.65, intrusionRate: 0.02, forgettingRate: 0.35, recallConsistency: 0.95, latencyIndex: 0.35 },
+        { recallAccuracy: 0.60, intrusionRate: 0.03, forgettingRate: 0.40, recallConsistency: 0.92, latencyIndex: 0.38 },
+        { recallAccuracy: 0.70, intrusionRate: 0.01, forgettingRate: 0.30, recallConsistency: 0.94, latencyIndex: 0.33 },
+        { recallAccuracy: 0.60, intrusionRate: 0.02, forgettingRate: 0.40, recallConsistency: 0.93, latencyIndex: 0.36 },
+        { recallAccuracy: 0.65, intrusionRate: 0.02, forgettingRate: 0.35, recallConsistency: 0.95, latencyIndex: 0.34 },
+        { recallAccuracy: 0.60, intrusionRate: 0.02, forgettingRate: 0.40, recallConsistency: 0.94, latencyIndex: 0.35 },
     ] as MemoryFeatures[],
 
-    // Gradual decline - 85% dropping to 55% over 6 sessions
+    // Gradual decline - Dropping to Older Adult Norms (~4/10)
     gradualDecline: [
-        { recallAccuracy: 0.86, intrusionRate: 0.04, forgettingRate: 0.14, recallConsistency: 0.95, latencyIndex: 0.32 },
-        { recallAccuracy: 0.78, intrusionRate: 0.08, forgettingRate: 0.22, recallConsistency: 0.82, latencyIndex: 0.42 },
-        { recallAccuracy: 0.72, intrusionRate: 0.12, forgettingRate: 0.28, recallConsistency: 0.75, latencyIndex: 0.48 },
-        { recallAccuracy: 0.65, intrusionRate: 0.15, forgettingRate: 0.35, recallConsistency: 0.68, latencyIndex: 0.55 },
-        { recallAccuracy: 0.58, intrusionRate: 0.18, forgettingRate: 0.42, recallConsistency: 0.60, latencyIndex: 0.62 },
-        { recallAccuracy: 0.52, intrusionRate: 0.22, forgettingRate: 0.48, recallConsistency: 0.52, latencyIndex: 0.70 },
+        { recallAccuracy: 0.65, intrusionRate: 0.02, forgettingRate: 0.35, recallConsistency: 0.95, latencyIndex: 0.32 }, // Healthy
+        { recallAccuracy: 0.60, intrusionRate: 0.04, forgettingRate: 0.40, recallConsistency: 0.85, latencyIndex: 0.42 },
+        { recallAccuracy: 0.50, intrusionRate: 0.06, forgettingRate: 0.50, recallConsistency: 0.75, latencyIndex: 0.48 }, // Borderline
+        { recallAccuracy: 0.40, intrusionRate: 0.08, forgettingRate: 0.60, recallConsistency: 0.68, latencyIndex: 0.55 }, // Older avg
+        { recallAccuracy: 0.35, intrusionRate: 0.10, forgettingRate: 0.65, recallConsistency: 0.60, latencyIndex: 0.62 },
+        { recallAccuracy: 0.30, intrusionRate: 0.12, forgettingRate: 0.70, recallConsistency: 0.52, latencyIndex: 0.70 }, // Impaired
     ] as MemoryFeatures[],
 
     // Inconsistent recall - high variance between sessions

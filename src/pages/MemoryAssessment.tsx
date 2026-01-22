@@ -13,6 +13,7 @@ import { selectRandomWords } from '../data/wordPools';
 import { extractMemoryFeatures, identifyKeyFactors } from '../ai/memoryFeatures';
 import { useMemoryResults } from '../hooks/useTestResults';
 import type { AssessmentPhase, RawMemoryMetrics } from '../types/memoryTypes';
+import { getMemoryFeedback } from '../utils/normativeStats';
 import './MemoryAssessment.css';
 
 // Configuration
@@ -332,6 +333,19 @@ export function MemoryAssessment() {
                                     {metrics?.correctCount} out of {WORD_COUNT}
                                 </span>
                             </div>
+
+                            {/* Feedback Badge */}
+                            {metrics && (() => {
+                                const feedback = getMemoryFeedback(metrics.correctCount);
+                                return (
+                                    <div className="feedback-section mt-4 mb-4 p-3 rounded bg-white/5 border border-white/10 text-center">
+                                        <div style={{ fontWeight: 'bold', color: feedback.color === 'success' ? '#4ade80' : feedback.color === 'primary' ? '#38bdf8' : feedback.color === 'warning' ? '#fbbf24' : '#94a3b8' }}>
+                                            {feedback.category}
+                                        </div>
+                                        <div style={{ fontSize: '0.9rem', opacity: 0.8 }}>{feedback.message}</div>
+                                    </div>
+                                );
+                            })()}
 
                             {metrics && metrics.falseRecallCount > 0 && (
                                 <div className="result-item secondary">

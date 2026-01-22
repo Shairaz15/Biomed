@@ -5,6 +5,7 @@ import { PageWrapper } from "../../layout";
 import { usePatternResults } from "../../../hooks/useTestResults";
 import { extractPatternFeatures } from "../../../ai/patternFeatures";
 import type { PatternRoundData, PatternAssessmentResult } from "../../../types/patternTypes";
+import { getPatternFeedback } from "../../../utils/normativeStats";
 import "./PatternAssessment.css";
 
 type Phase = 'instructions' | 'demonstration' | 'calibration' | 'assessment' | 'complete';
@@ -284,9 +285,33 @@ export function PatternAssessment() {
                         <h1>Session Complete</h1>
                         <div className="instruction-card">
                             <p>Thank you for completing the assessment.</p>
+
                             <div className="stats-preview">
-                                <h2>Level Reached: {Math.max(...rounds.filter(r => r.isCorrect).map(r => r.level), 0)}</h2>
-                                <p>Data saved for analysis.</p>
+                                {(() => {
+                                    const maxLevel = Math.max(...rounds.filter(r => r.isCorrect).map(r => r.level), 0);
+                                    const feedback = getPatternFeedback(maxLevel); // Approximate span
+
+                                    return (
+                                        <>
+                                            <h2>Level Reached: {maxLevel}</h2>
+                                            <div className="feedback-section mt-2 mb-4">
+                                                <span style={{
+                                                    display: 'inline-block',
+                                                    padding: '4px 12px',
+                                                    borderRadius: '16px',
+                                                    backgroundColor: feedback.color === 'success' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(148, 163, 184, 0.2)',
+                                                    color: feedback.color === 'success' ? '#4ade80' : '#cbd5e1',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.9rem'
+                                                }}>
+                                                    {feedback.category}
+                                                </span>
+                                                <p className="text-sm mt-1 opacity-75">{feedback.message}</p>
+                                            </div>
+                                            <p>Data saved for analysis.</p>
+                                        </>
+                                    );
+                                })()}
                             </div>
                             <Button onClick={() => navigate('/dashboard')} variant="primary" className="w-full mt-4">
                                 View Dashboard

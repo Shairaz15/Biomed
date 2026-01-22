@@ -5,6 +5,7 @@ import { Button, Card } from "../../common";
 import { useLanguageResults } from "../../../hooks/useTestResults";
 import { extractLanguageFeatures } from "../../../ai/languageFeatures";
 import type { LanguageAssessmentResult } from "../../../types/languageTypes";
+import { getLanguageFeedback } from "../../../utils/normativeStats";
 import "./LanguageAssessment.css";
 
 // Polyfill for types
@@ -295,11 +296,27 @@ export function LanguageAssessment() {
 
                         {/* Insight Chips */}
                         <div className="insights-grid">
-                            {getInsights(result).map((insight, i) => (
-                                <span key={i} className={`insight-chip ${insight.type}`}>
-                                    {insight.text}
-                                </span>
-                            ))}
+                            {(() => {
+                                const feedback = getLanguageFeedback(result.derivedFeatures.wpm, result.derivedFeatures.hesitationIndex);
+                                const otherInsights = getInsights(result).filter(i => i.text !== "Excellent Fluency" && i.text !== "Good Fluency" && i.text !== "Reduced Fluency" && i.text !== "Fast Pace" && i.text !== "Slower Pace"); // Filter out duplicates if new logic overlaps, or just keep mixture.
+
+                                return (
+                                    <>
+                                        {/* Normative Feedback Badge */}
+                                        <div className="w-full text-center mb-2">
+                                            <span className={`insight-chip ${feedback.category === 'Exceptional' ? 'positive' : feedback.category === 'Above Average' ? 'positive' : 'neutral'}`} style={{ border: '1px solid currentColor' }}>
+                                                {feedback.category}: {feedback.message}
+                                            </span>
+                                        </div>
+
+                                        {otherInsights.map((insight, i) => (
+                                            <span key={i} className={`insight-chip ${insight.type}`}>
+                                                {insight.text}
+                                            </span>
+                                        ))}
+                                    </>
+                                );
+                            })()}
                         </div>
 
                         <Button onClick={() => navigate('/dashboard')} className="w-full mt-4">View Dashboard Trends</Button>

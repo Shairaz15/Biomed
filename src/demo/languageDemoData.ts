@@ -23,10 +23,10 @@ export const STABLE_SPEECH_DATA: LanguageAssessmentResult[] = Array.from({ lengt
         uniqueWordCount: 80
     },
     derivedFeatures: {
-        wpm: 145 + (Math.random() * 10 - 5), // Stable ~145
+        wpm: 150 + (Math.random() * 15 - 7.5), // Healthy Adult ~150 WPM
         lexicalDiversity: 0.6,
         fluencyIndex: 95,
-        hesitationIndex: 0.02,
+        hesitationIndex: 0.023, // ~2.3% Hesitation
         speechStability: 90,
         coherenceProxy: 85
     },
@@ -51,10 +51,10 @@ export const DECLINING_SPEECH_DATA: LanguageAssessmentResult[] = Array.from({ le
         uniqueWordCount: 70 - i
     },
     derivedFeatures: {
-        wpm: 140 - (i * 10), // Dropping WPM
+        wpm: 150 - (i * 6), // Declines to ~120 WPM
         lexicalDiversity: 0.6 - (i * 0.05),
-        fluencyIndex: 90 - (i * 10), // Dropping fluency
-        hesitationIndex: 0.05 + (i * 0.05),
+        fluencyIndex: 90 - (i * 10),
+        hesitationIndex: 0.023 + (i * 0.006), // Increases to ~5.3%
         speechStability: 80 - (i * 10),
         coherenceProxy: 80 - (i * 5)
     },
