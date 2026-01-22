@@ -10,9 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Button } from '../components/common';
 import { PageWrapper } from '../components/layout';
 import { selectRandomWords } from '../data/wordPools';
-import { extractMemoryFeatures, computeMemoryProfile, identifyKeyFactors } from '../ai/memoryFeatures';
+import { extractMemoryFeatures, identifyKeyFactors } from '../ai/memoryFeatures';
 import { useMemoryResults } from '../hooks/useTestResults';
-import type { AssessmentPhase, RawMemoryMetrics, MemoryFeatures, MemoryProfile } from '../types/memoryTypes';
+import type { AssessmentPhase, RawMemoryMetrics } from '../types/memoryTypes';
 import './MemoryAssessment.css';
 
 // Configuration
@@ -45,8 +45,6 @@ export function MemoryAssessment() {
 
     // Results state
     const [metrics, setMetrics] = useState<RawMemoryMetrics | null>(null);
-    const [features, setFeatures] = useState<MemoryFeatures | null>(null);
-    const [profile, setProfile] = useState<MemoryProfile | null>(null);
     const [keyFactors, setKeyFactors] = useState<string[]>([]);
 
     // Storage hook
@@ -175,11 +173,12 @@ export function MemoryAssessment() {
         setPhase('scoring');
 
         // Extract features and compute profile
+        // Extract features and compute profile
         const extractedFeatures = extractMemoryFeatures(rawMetrics);
-        setFeatures(extractedFeatures);
+        // setFeatures(extractedFeatures);
 
-        const computedProfile = computeMemoryProfile(extractedFeatures);
-        setProfile(computedProfile);
+        // const computedProfile = computeMemoryProfile(extractedFeatures);
+        // setProfile(computedProfile);
 
         const factors = identifyKeyFactors(rawMetrics, extractedFeatures);
         setKeyFactors(factors);

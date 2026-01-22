@@ -1,1 +1,1 @@
-export { useReactionResults, getLastReactionResult, clearLastReactionResult } from "./useTestResults";
+export { useReactionResults } from "./useTestResults";

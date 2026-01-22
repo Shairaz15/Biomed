@@ -1,13 +1,7 @@
-/**
- * Memory Features Extractor
- * Extracts ML-ready features from memory assessment raw data.
- */
-
 import type {
     RawMemoryMetrics,
     MemoryFeatures,
-    MemoryProfile,
-    MemoryAssessmentResult
+    MemoryProfile
 } from '../types/memoryTypes';
 
 /**

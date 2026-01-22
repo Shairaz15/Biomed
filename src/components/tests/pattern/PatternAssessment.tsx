@@ -29,7 +29,6 @@ export function PatternAssessment() {
 
     // Data Collection
     const [rounds, setRounds] = useState<PatternRoundData[]>([]);
-    const startTimeRef = useRef<number>(0);
     const roundStartTimeRef = useRef<number>(0);
     const sequenceShowTimeRef = useRef<number>(0);
 

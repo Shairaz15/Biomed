@@ -3,7 +3,7 @@
  * Demo profiles for judge demonstrations showing different recall patterns.
  */
 
-import type { MemoryAssessmentResult, MemoryFeatures } from '../types/memoryTypes';
+import type { MemoryFeatures } from '../types/memoryTypes';
 
 /**
  * Demo feature profiles for different patterns.

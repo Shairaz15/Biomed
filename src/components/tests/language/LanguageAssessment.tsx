@@ -211,7 +211,7 @@ export function LanguageAssessment() {
                             {!isRecording ? (
                                 <Button onClick={startRecording} className="record-btn pulse">Start Recording</Button>
                             ) : (
-                                <Button onClick={stopRecording} variant="danger" className="stop-btn">Finish Recording</Button>
+                                <Button onClick={stopRecording} variant="secondary" className="stop-btn">Finish Recording</Button>
                             )}
                         </div>
                     </Card>
@@ -230,15 +230,15 @@ export function LanguageAssessment() {
                         <div className="metrics-grid">
                             <div className="metric">
                                 <label>Speech Rate</label>
-                                <value>{Math.round(result.derivedFeatures.wpm)} WPM</value>
+                                <p className="value">{Math.round(result.derivedFeatures.wpm)} WPM</p>
                             </div>
                             <div className="metric">
                                 <label>Fluency Index</label>
-                                <value>{Math.round(result.derivedFeatures.fluencyIndex)}/100</value>
+                                <p className="value">{Math.round(result.derivedFeatures.fluencyIndex)}/100</p>
                             </div>
                             <div className="metric">
                                 <label>Hesitation</label>
-                                <value>{(result.derivedFeatures.hesitationIndex * 100).toFixed(1)}%</value>
+                                <p className="value">{(result.derivedFeatures.hesitationIndex * 100).toFixed(1)}%</p>
                             </div>
                         </div>
                         <Button onClick={() => navigate('/dashboard')} className="w-full mt-4">View Dashboard Trends</Button>

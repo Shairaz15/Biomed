@@ -1,4 +1,4 @@
-import type { PatternAssessmentResult, PatternRoundData } from "../types/patternTypes";
+import type { PatternRoundData } from "../types/patternTypes";
 
 /**
  * Extracts deep cognitive features from raw pattern assessment data.

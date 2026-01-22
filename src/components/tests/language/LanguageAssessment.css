@@ -146,7 +146,7 @@
     margin-bottom: 0.5rem;
 }
 
-.metric value {
+.metric .value {
     font-size: 1.25rem;
     font-weight: 600;
     color: #f1f5f9;
