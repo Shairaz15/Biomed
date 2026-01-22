@@ -1,0 +1,172 @@
+.reaction-test {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Background states - clinical-calm colors */
+.bg-neutral {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.bg-ready {
+    background: linear-gradient(135deg, #1e293b 0%, #312e81 100%);
+}
+
+.bg-stimulus {
+    background: linear-gradient(135deg, #115e59 0%, #14b8a6 100%);
+}
+
+.bg-error {
+    background: linear-gradient(135deg, #78350f 0%, #b45309 100%);
+}
+
+.bg-success {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+}
+
+.reaction-content {
+    text-align: center;
+    padding: var(--spacing-xl);
+    max-width: 600px;
+}
+
+/* Progress */
+.reaction-progress {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.round-indicator {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.calibration-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+}
+
+/* Main message */
+.reaction-message {
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.2;
+}
+
+/* Reaction time display */
+.reaction-time-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+}
+
+.time-value {
+    font-size: clamp(3rem, 12vw, 6rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+
+.time-unit {
+    font-size: var(--font-size-2xl);
+    color: var(--color-text-secondary);
+}
+
+/* Instructions */
+.instruction-text {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+}
+
+.instruction-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-xl) 0;
+    text-align: left;
+}
+
+.instruction-list li {
+    padding: var(--spacing-sm) 0;
+    padding-left: var(--spacing-lg);
+    position: relative;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+}
+
+.instruction-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+}
+
+/* Start area */
+.reaction-start,
+.reaction-instructions,
+.reaction-complete {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Results summary */
+.result-summary {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+.result-item {
+    text-align: center;
+}
+
+.result-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-xs);
+}
+
+.result-value {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+
+/* Tap hint */
+.tap-hint {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
