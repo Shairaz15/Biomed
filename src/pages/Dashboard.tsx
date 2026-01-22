@@ -79,7 +79,7 @@ export function Dashboard() {
         date: session.timestamp.toLocaleDateString(),
         memory: Math.round(session.features.memoryAccuracy * 100),
         reaction: Math.round(session.features.reactionTimeAvg),
-        pattern: Math.round(session.features.patternScore * 100),
+        pattern: session.features.patternScore,
         speech: Math.round(session.features.speechWPM),
         isReal: false,
     }));
