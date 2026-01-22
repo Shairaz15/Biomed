@@ -10,7 +10,7 @@
  */
 
 import type { SessionDataPoint } from '../ai/trendAnalyzer';
-import type { NormalizedSession, FeatureVector } from './types';
+import type { NormalizedSession } from './types';
 import { ML_CONFIG } from './types';
 
 // Feature indices for reference

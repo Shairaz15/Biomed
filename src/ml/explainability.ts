@@ -32,8 +32,8 @@ export const DOMAIN_MAPPING: Record<string, string[]> = {
 export function computeFeatureImportance(model: tf.LayersModel, inputTensor: tf.Tensor): Record<string, number> {
     return tf.tidy(() => {
         // We want the gradient of the winning class score w.r.t input
-        const pred = model.predict(inputTensor) as tf.Tensor;
-        const bestClassIndex = pred.argMax(-1).dataSync()[0];
+        // const pred = model.predict(inputTensor) as tf.Tensor;
+        // const bestClassIndex = pred.argMax(-1).dataSync()[0];
 
         // This is a simplified heuristic since TFJS gradient API is tricky in inference mode
         // For MVP, we use a permutation-based approach which is more robust in browser

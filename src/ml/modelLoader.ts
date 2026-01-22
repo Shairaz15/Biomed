@@ -15,12 +15,12 @@ export async function loadTrendModel(): Promise<tf.LayersModel | null> {
     if (loadError) return null; // Don't retry if failed once
 
     try {
-        console.log('Loading Trend Model from:', MODEL_PATH);
+        console.log('[ML Debug] Loading Trend Model from:', MODEL_PATH);
         modelInstance = await tf.loadLayersModel(MODEL_PATH);
-        console.log('Trend Model Loaded Successfully');
+        console.log('[ML Debug] Trend Model Loaded Successfully');
         return modelInstance;
     } catch (error) {
-        console.warn('Failed to load Trend Model:', error);
+        console.error('[ML Debug] Failed to load Trend Model:', error);
         loadError = error as Error;
         return null;
     }

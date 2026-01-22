@@ -15,7 +15,8 @@ import { useMemoryResults, usePatternResults, useLanguageResults } from "../hook
 import { analyzeTrends } from "../ai/trendAnalyzer";
 import { detectAnomalies, createBaseline } from "../ai/anomalyDetector";
 import { computeRisk } from "../ai/riskEngine";
-import { predictTrend, TrendPrediction } from "../ml";
+import { predictTrend } from "../ml";
+import type { TrendPrediction } from "../ml";
 import type { ReactionTestResult } from "../components/tests/reaction/reactionFeatures";
 import "./Dashboard.css";
 
@@ -65,12 +66,28 @@ export function Dashboard() {
     const sessionDataPoints = getDemoSessionDataPoints();
 
     // Fetch ML Prediction (Async)
+    // Fetch ML Prediction (Async)
     useEffect(() => {
         let mounted = true;
         async function fetchML() {
+            // Debug logs
+            console.log('fetchML triggered. showDemoData:', showDemoData);
+            console.log('Session count:', sessions.length);
+
             if (sessions.length >= 3) {
-                const pred = await predictTrend(sessionDataPoints);
-                if (mounted) setMlPrediction(pred);
+                console.log('Calling predictTrend with sessions:', sessionDataPoints);
+                try {
+                    const pred = await predictTrend(sessionDataPoints);
+                    console.log('ML Prediction received:', pred);
+                    if (mounted) {
+                        setMlPrediction(pred);
+                        console.log('mlPrediction state updated');
+                    }
+                } catch (err) {
+                    console.error('Error in predictTrend:', err);
+                }
+            } else {
+                console.warn('Not enough sessions for ML:', sessions.length);
             }
         }
         if (showDemoData) fetchML();
@@ -240,9 +257,8 @@ export function Dashboard() {
                     </Card>
                 )}
 
-                {/* ML Insight Card (Only if high confidence) */}
                 {riskAnalysis?.mlPrediction && riskAnalysis.mlPrediction.confidence > 0.6 && (
-                    <Card className="ml-insight-card animate-fadeIn" style={{ borderLeft: '4px solid #8b5cf6' }}>
+                    <Card className="ml-insight-card animate-fadeIn">
                         <CardHeader
                             title="ML Trend Analysis"
                             subtitle="Probabilistic pattern estimation (Beta)"

@@ -8,7 +8,7 @@ import os
 
 # Configuration
 CSV_FILE = "cognitive_population_data.csv"
-MODEL_DIR = "../src/models/trend-cnn"
+MODEL_DIR = "../public/models/trend-cnn"
 WINDOW_SIZE = 6
 FEATURE_COUNT = 8
 
@@ -88,9 +88,10 @@ def train_model():
     X, y = preprocess_data(df)
     print(f"Training Data Shape: {X.shape}")
     
-    # Model Architecture (Same as before)
+    # Model Architecture
     model = keras.Sequential([
-        layers.InputLayer(input_shape=(WINDOW_SIZE, FEATURE_COUNT)),
+        # Explicit InputLayer with batch_input_shape is most robust for TFJS
+        layers.InputLayer(batch_input_shape=(None, WINDOW_SIZE, FEATURE_COUNT)),
         
         layers.Conv1D(filters=32, kernel_size=3, activation='relu', padding='same'),
         layers.BatchNormalization(),

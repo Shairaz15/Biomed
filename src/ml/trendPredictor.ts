@@ -6,7 +6,7 @@
 import * as tf from '@tensorflow/tfjs';
 import type { SessionDataPoint } from '../ai/trendAnalyzer';
 import { normalizeSessionSequence } from './featureNormalizer';
-import { loadTrendModel, isModelLoaded } from './modelLoader';
+import { loadTrendModel } from './modelLoader';
 import { computeFeatureImportance } from './explainability';
 import type { TrendPrediction } from './types';
 import { ML_CONFIG } from './types';
@@ -21,23 +21,31 @@ export async function predictTrend(sessions: SessionDataPoint[]): Promise<TrendP
     }
 
     // 2. Load model
+    console.log("[ML Debug] Loading trend model...");
     const model = await loadTrendModel();
-    if (!model) return null;
+    if (!model) {
+        console.error("[ML Debug] Failed to load trend model");
+        return null;
+    }
+    console.log("[ML Debug] Model loaded successfully");
 
     try {
         // 3. Prepare Input
         const sequence = normalizeSessionSequence(sessions);
+        console.log("[ML Debug] Normalized sequence:", sequence);
         // Shape: [1, Window, Features]
         const inputTensor = tf.tensor([sequence]);
 
         // 4. Run Inference
         const predTensor = model.predict(inputTensor) as tf.Tensor;
         const probabilities = predTensor.dataSync(); // [stable, declining, improving]
+        console.log("[ML Debug] Prediction probabilities:", probabilities);
 
         // 5. Determine Result
         const maxProbIndex = predTensor.argMax(-1).dataSync()[0];
         const confidence = probabilities[maxProbIndex];
         const direction = CLASS_LABELS[maxProbIndex];
+        console.log(`[ML Debug] Prediction: ${direction} (${confidence})`);
 
         // 6. Explainability
         const contributions = computeFeatureImportance(model, inputTensor);
