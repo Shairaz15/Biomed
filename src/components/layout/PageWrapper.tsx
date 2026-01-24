@@ -1,4 +1,6 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { Icon } from "../common";
 import { FOOTER_DISCLAIMER } from "../../ethics/disclaimer";
 import "./PageWrapper.css";
 
@@ -13,18 +15,37 @@ export function PageWrapper({
     showHeader = true,
     showFooter = true,
 }: PageWrapperProps) {
+    const location = useLocation();
+    const currentPath = location.pathname;
+
+    const isActive = (path: string) => currentPath === path;
+
     return (
         <div className="page-wrapper">
             {showHeader && (
                 <header className="page-header">
                     <div className="container">
                         <a href="/" className="logo">
-                            <span className="logo-icon">🧠</span>
-                            <span className="logo-text">CogniTrack</span>
+                            <span className="logo-icon">
+                                <Icon name="brain-circuit" size={20} />
+                            </span>
+                            <span className="logo-text">
+                                Cogni<span className="text-gradient">Track</span>
+                            </span>
                         </a>
-                        <nav className="nav">
-                            <a href="/dashboard" className="nav-link">Dashboard</a>
-                            <a href="/tests" className="nav-link">Tests</a>
+                        <nav className="nav desktop-nav">
+                            <a
+                                href="/dashboard"
+                                className={`nav-link ${isActive("/dashboard") ? "active" : ""}`}
+                            >
+                                Dashboard
+                            </a>
+                            <a
+                                href="/tests"
+                                className={`nav-link ${isActive("/tests") ? "active" : ""}`}
+                            >
+                                Tests
+                            </a>
                         </nav>
                     </div>
                 </header>
@@ -41,6 +62,46 @@ export function PageWrapper({
                     </div>
                 </footer>
             )}
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="mobile-nav">
+                <a
+                    href="/"
+                    className={`mobile-nav-item ${isActive("/") ? "active" : ""}`}
+                >
+                    <span className="mobile-nav-icon">
+                        <Icon name="insight" size={20} />
+                    </span>
+                    <span className="mobile-nav-label">Home</span>
+                </a>
+                <a
+                    href="/dashboard"
+                    className={`mobile-nav-item ${isActive("/dashboard") ? "active" : ""}`}
+                >
+                    <span className="mobile-nav-icon">
+                        <Icon name="chart-line-up" size={20} />
+                    </span>
+                    <span className="mobile-nav-label">Dashboard</span>
+                </a>
+                <a
+                    href="/tests"
+                    className={`mobile-nav-item ${isActive("/tests") ? "active" : ""}`}
+                >
+                    <span className="mobile-nav-icon">
+                        <Icon name="assess" size={20} />
+                    </span>
+                    <span className="mobile-nav-label">Tests</span>
+                </a>
+                <a
+                    href="/help"
+                    className={`mobile-nav-item ${isActive("/help") ? "active" : ""}`}
+                >
+                    <span className="mobile-nav-icon">
+                        <Icon name="info" size={20} />
+                    </span>
+                    <span className="mobile-nav-label">Help</span>
+                </a>
+            </nav>
         </div>
     );
 }

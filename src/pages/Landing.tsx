@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/common";
+import { Button, Icon } from "../components/common";
 import { MAIN_DISCLAIMER } from "../ethics/disclaimer";
 import { DEMO_USER } from "../demo/demoProfile";
 import "./Landing.css";
@@ -16,7 +16,6 @@ export function Landing() {
     };
 
     const handleDemo = () => {
-        // Set demo mode in session storage
         sessionStorage.setItem("demoMode", "true");
         sessionStorage.setItem("demoUserId", DEMO_USER.id);
         navigate("/dashboard");
@@ -24,82 +23,298 @@ export function Landing() {
 
     return (
         <div className="landing">
-            {/* Hero Section */}
+            {/* Background Effects - Aurora mesh */}
+            <div className="landing-bg">
+                <div className="bg-aurora-mesh" />
+                <div className="bg-gradient-orb bg-orb-1" />
+                <div className="bg-gradient-orb bg-orb-2" />
+                <div className="bg-noise" />
+            </div>
+
+            {/* Hero Section - Bento Grid Layout */}
             <section className="hero">
-                <div className="hero-content animate-fadeIn">
-                    <h1 className="hero-title">
-                        Track Your Cognitive
-                        <span className="text-accent"> Performance</span>
-                    </h1>
-                    <p className="hero-subtitle">
-                        Track cognitive performance trends over time.
-                        <br />
-                        This tool supports awareness, not diagnosis.
-                    </p>
+                <div className="hero-bento">
+                    {/* Main Hero Content */}
+                    <div className="hero-content animate-fadeInUp">
+                        <span className="hero-badge animate-fadeIn">
+                            <span className="badge-dot" />
+                            Non-Diagnostic Awareness Tool
+                        </span>
 
-                    {/* Disclaimer Card */}
-                    <div className="disclaimer-card glass-card">
-                        <div className="disclaimer-header">
-                            <span className="disclaimer-icon">ℹ️</span>
-                            <span className="disclaimer-title">Important Notice</span>
+                        <h1 className="hero-title">
+                            Track Cognitive Performance.
+                            <br />
+                            <span className="text-gradient text-glow">Understand Trends Early.</span>
+                        </h1>
+
+                        <p className="hero-subtitle">
+                            CogniTrack helps you monitor memory, attention, reaction speed, and language patterns over time — for awareness, not diagnosis.
+                        </p>
+
+                        {/* Stats Bar */}
+                        <div className="hero-stats animate-fadeIn delay-200">
+                            <div className="stat-item">
+                                <span className="stat-number">4</span>
+                                <span className="stat-label">Cognitive Tests</span>
+                            </div>
+                            <div className="stat-divider" />
+                            <div className="stat-item">
+                                <span className="stat-number">ML</span>
+                                <span className="stat-label">Trend Analysis</span>
+                            </div>
+                            <div className="stat-divider" />
+                            <div className="stat-item">
+                                <span className="stat-number">100%</span>
+                                <span className="stat-label">Privacy First</span>
+                            </div>
                         </div>
-                        <p className="disclaimer-text">{MAIN_DISCLAIMER}</p>
-                        <label className="disclaimer-checkbox">
-                            <input
-                                type="checkbox"
-                                checked={disclaimerAccepted}
-                                onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+                    </div>
+
+                    {/* Simulation Card - Trend Line Preview */}
+                    <div className="hero-simulation glass-card floating animate-fadeIn delay-300">
+                        <div className="simulation-header">
+                            <Icon name="chart-line-up" size={20} />
+                            <span>Trend Preview</span>
+                        </div>
+                        <svg className="simulation-chart" viewBox="0 0 200 80" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#2dd4bf" />
+                                    <stop offset="100%" stopColor="#818cf8" />
+                                </linearGradient>
+                            </defs>
+                            <path
+                                className="simulation-line"
+                                d="M 0 60 Q 25 55, 50 45 T 100 35 T 150 25 T 200 20"
+                                fill="none"
+                                stroke="url(#lineGradient)"
+                                strokeWidth="2"
+                                strokeLinecap="round"
                             />
-                            <span>I understand and accept these terms</span>
-                        </label>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="hero-actions">
-                        <Button
-                            variant="primary"
-                            size="lg"
-                            onClick={handleStart}
-                            disabled={!disclaimerAccepted}
-                        >
-                            Start Assessment
-                        </Button>
-                        <Button variant="secondary" size="lg" onClick={handleDemo}>
-                            Try Demo
-                        </Button>
+                        </svg>
+                        <div className="simulation-labels">
+                            <span>Sessions</span>
+                            <span className="text-accent">Stable Trend</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Background decoration */}
-                <div className="hero-bg-gradient" />
+                {/* Disclaimer Card */}
+                <div className="disclaimer-card glass-card animate-fadeIn delay-400">
+                    <div className="disclaimer-header">
+                        <Icon name="info" size={20} animated />
+                        <span className="disclaimer-title">Important Notice</span>
+                    </div>
+                    <p className="disclaimer-text">{MAIN_DISCLAIMER}</p>
+                    <label className="disclaimer-checkbox">
+                        <input
+                            type="checkbox"
+                            checked={disclaimerAccepted}
+                            onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+                        />
+                        <span className="checkbox-custom">
+                            {disclaimerAccepted && <Icon name="check" size={14} />}
+                        </span>
+                        <span>I understand and accept these terms</span>
+                    </label>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="hero-actions animate-fadeIn delay-500">
+                    <Button
+                        variant="primary"
+                        size="lg"
+                        onClick={handleStart}
+                        disabled={!disclaimerAccepted}
+                    >
+                        Start Assessment
+                    </Button>
+                    <Button variant="secondary" size="lg" onClick={handleDemo}>
+                        How It Works
+                    </Button>
+                </div>
             </section>
 
-            {/* Features Section */}
-            <section className="features container">
-                <h2 className="section-title">How It Works</h2>
+            {/* How It Works Section */}
+            <section className="workflow-section container">
+                <div className="section-header animate-fadeInUp">
+                    <span className="section-badge">How It Works</span>
+                    <h2 className="section-title">
+                        From Assessment to <span className="text-gradient">Insights</span>
+                    </h2>
+                    <p className="section-subtitle">
+                        Our intelligent system guides you through cognitive assessments and provides meaningful trend analysis.
+                    </p>
+                </div>
+
+                <div className="workflow-timeline">
+                    <svg className="workflow-connector" viewBox="0 0 4 400" preserveAspectRatio="none">
+                        <line
+                            className="connector-line"
+                            x1="2" y1="0" x2="2" y2="400"
+                            stroke="url(#connectorGradient)"
+                            strokeWidth="2"
+                        />
+                        <defs>
+                            <linearGradient id="connectorGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#5eead4" stopOpacity="0.3" />
+                                <stop offset="50%" stopColor="#5eead4" stopOpacity="0.8" />
+                                <stop offset="100%" stopColor="#818cf8" stopOpacity="0.3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                    <div className="workflow-step animate-fadeInUp delay-100">
+                        <div className="step-number">01</div>
+                        <div className="step-content glass-card">
+                            <div className="step-icon">
+                                <Icon name="assess" size={28} animated />
+                            </div>
+                            <h3>Complete Assessments</h3>
+                            <p>Take short cognitive tests covering memory, reaction time, pattern recognition, and language.</p>
+                        </div>
+                    </div>
+
+                    <div className="workflow-step animate-fadeInUp delay-200">
+                        <div className="step-number">02</div>
+                        <div className="step-content glass-card">
+                            <div className="step-icon">
+                                <Icon name="analyze" size={28} animated />
+                            </div>
+                            <h3>Track Over Time</h3>
+                            <p>Your results are stored locally and tracked over multiple sessions to identify patterns.</p>
+                        </div>
+                    </div>
+
+                    <div className="workflow-step animate-fadeInUp delay-300">
+                        <div className="step-number">03</div>
+                        <div className="step-content glass-card">
+                            <div className="step-icon">
+                                <Icon name="timeline" size={28} animated />
+                            </div>
+                            <h3>ML Analysis</h3>
+                            <p>Our on-device machine learning model analyzes your trends without sending data anywhere.</p>
+                        </div>
+                    </div>
+
+                    <div className="workflow-step animate-fadeInUp delay-400">
+                        <div className="step-number">04</div>
+                        <div className="step-content glass-card">
+                            <div className="step-icon">
+                                <Icon name="insight" size={28} animated />
+                            </div>
+                            <h3>Gain Awareness</h3>
+                            <p>Receive insights about your cognitive trends to support proactive health awareness.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features Section - Bento Grid */}
+            <section className="features-section container">
+                <div className="section-header animate-fadeInUp">
+                    <span className="section-badge">Features</span>
+                    <h2 className="section-title">
+                        Comprehensive <span className="text-gradient">Cognitive</span> Assessment
+                    </h2>
+                </div>
+
                 <div className="features-grid">
-                    <div className="feature-card glass-card">
-                        <span className="feature-icon">🧩</span>
-                        <h3>Cognitive Tasks</h3>
-                        <p>Complete short memory, reaction, pattern, and language tests.</p>
+                    <div className="feature-card glass-card floating animate-fadeInUp delay-100">
+                        <div className="feature-icon-wrapper">
+                            <Icon name="memory" size={32} animated />
+                        </div>
+                        <h3>Memory Recall</h3>
+                        <p>Test your working memory by memorizing and recalling word sequences.</p>
+                        <span className="feature-duration">
+                            <Icon name="clock" size={14} />
+                            ~2 min
+                        </span>
                     </div>
-                    <div className="feature-card glass-card">
-                        <span className="feature-icon">📊</span>
-                        <h3>Trend Analysis</h3>
-                        <p>AI-powered analysis tracks your performance over time.</p>
+
+                    <div className="feature-card glass-card floating animate-fadeInUp delay-200">
+                        <div className="feature-icon-wrapper">
+                            <Icon name="reaction" size={32} animated />
+                        </div>
+                        <h3>Reaction Time</h3>
+                        <p>Measure your response speed to visual stimuli with millisecond precision.</p>
+                        <span className="feature-duration">
+                            <Icon name="clock" size={14} />
+                            ~1 min
+                        </span>
                     </div>
-                    <div className="feature-card glass-card">
-                        <span className="feature-icon">🔔</span>
-                        <h3>Early Awareness</h3>
-                        <p>Get notified of significant changes in your cognitive trends.</p>
+
+                    <div className="feature-card glass-card floating animate-fadeInUp delay-300">
+                        <div className="feature-icon-wrapper">
+                            <Icon name="pattern" size={32} animated />
+                        </div>
+                        <h3>Pattern Recognition</h3>
+                        <p>Challenge your visual processing by identifying patterns in complex grids.</p>
+                        <span className="feature-duration">
+                            <Icon name="clock" size={14} />
+                            ~2 min
+                        </span>
                     </div>
-                    <div className="feature-card glass-card">
-                        <span className="feature-icon">🔒</span>
-                        <h3>Privacy First</h3>
-                        <p>Your data is private. No personal identifiers stored.</p>
+
+                    <div className="feature-card glass-card floating animate-fadeInUp delay-400">
+                        <div className="feature-icon-wrapper">
+                            <Icon name="language" size={32} animated />
+                        </div>
+                        <h3>Language Task</h3>
+                        <p>Analyze speech patterns and verbal fluency through voice-based exercises.</p>
+                        <span className="feature-duration">
+                            <Icon name="clock" size={14} />
+                            ~2 min
+                        </span>
                     </div>
                 </div>
             </section>
+
+            {/* Trust Section */}
+            <section className="trust-section container">
+                <div className="trust-grid">
+                    <div className="trust-card glass-card animate-fadeInUp">
+                        <div className="trust-icon">
+                            <Icon name="privacy" size={32} animated />
+                        </div>
+                        <h4>Privacy First</h4>
+                        <p>All data stays on your device. No cloud uploads, no tracking.</p>
+                    </div>
+                    <div className="trust-card glass-card animate-fadeInUp delay-100">
+                        <div className="trust-icon">
+                            <Icon name="evidence" size={32} animated />
+                        </div>
+                        <h4>Evidence-Based</h4>
+                        <p>Tests based on established cognitive assessment methodologies.</p>
+                    </div>
+                    <div className="trust-card glass-card animate-fadeInUp delay-200">
+                        <div className="trust-icon">
+                            <Icon name="notice" size={32} animated />
+                        </div>
+                        <h4>Not Diagnostic</h4>
+                        <p>Designed for awareness, not medical diagnosis. Consult professionals for concerns.</p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="landing-footer">
+                <div className="container">
+                    <div className="footer-content">
+                        <p className="footer-brand">
+                            <span className="text-gradient">CogniTrack</span>
+                        </p>
+                        <p className="footer-text">
+                            Cognitive performance tracking for awareness, not diagnosis.
+                        </p>
+                        <div className="footer-links">
+                            <a href="#privacy">Privacy</a>
+                            <a href="#terms">Terms</a>
+                            <a href="#about">About</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }

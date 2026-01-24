@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button } from "../components/common";
+import { Card, Button, Icon } from "../components/common";
+import type { IconName } from "../components/common";
 import { PageWrapper } from "../components/layout";
 import "./Tests.css";
 
@@ -10,7 +11,7 @@ interface TestInfo {
     id: TestType;
     title: string;
     description: string;
-    icon: string;
+    iconName: IconName;
     duration: string;
 }
 
@@ -19,28 +20,28 @@ const TESTS: TestInfo[] = [
         id: "memory",
         title: "Memory Recall",
         description: "Memorize a list of words, then recall them after a short delay.",
-        icon: "🧠",
+        iconName: "memory",
         duration: "~2 min",
     },
     {
         id: "reaction",
         title: "Reaction Time",
         description: "Respond as quickly as possible when the screen changes color.",
-        icon: "⚡",
+        iconName: "reaction",
         duration: "~1 min",
     },
     {
         id: "pattern",
         title: "Pattern Recognition",
         description: "Identify the matching or different pattern in a grid.",
-        icon: "🔷",
+        iconName: "pattern",
         duration: "~2 min",
     },
     {
         id: "language",
         title: "Language Task",
         description: "Describe what you did yesterday using voice input.",
-        icon: "🎤",
+        iconName: "language",
         duration: "~2 min",
     },
 ];
@@ -60,7 +61,7 @@ export function Tests() {
     return (
         <PageWrapper>
             <div className="tests container">
-                <div className="tests-header">
+                <div className="tests-header animate-fadeInUp">
                     <h1>Cognitive Assessment</h1>
                     <p className="text-secondary">
                         Complete the following tests to assess your cognitive performance.
@@ -69,17 +70,23 @@ export function Tests() {
                 </div>
 
                 <div className="tests-grid">
-                    {TESTS.map((test) => (
+                    {TESTS.map((test, index) => (
                         <Card
                             key={test.id}
-                            className={`test-card ${selectedTest === test.id ? "selected" : ""}`}
+                            floating
+                            className={`test-card animate-fadeInUp delay-${(index + 1) * 100} ${selectedTest === test.id ? "selected" : ""}`}
                             onClick={() => setSelectedTest(test.id)}
                         >
-                            <div className="test-icon">{test.icon}</div>
+                            <div className="test-icon-wrapper">
+                                <Icon name={test.iconName} size={36} animated />
+                            </div>
                             <h3 className="test-title">{test.title}</h3>
                             <p className="test-description">{test.description}</p>
                             <div className="test-meta">
-                                <span className="test-duration">⏱ {test.duration}</span>
+                                <span className="test-duration">
+                                    <Icon name="clock" size={14} />
+                                    {test.duration}
+                                </span>
                             </div>
                             <Button
                                 variant="secondary"
@@ -95,13 +102,16 @@ export function Tests() {
                     ))}
                 </div>
 
-                <div className="tests-info glass-card">
-                    <h3>📋 Assessment Guidelines</h3>
+                <div className="tests-info glass-card animate-fadeIn delay-500">
+                    <div className="tests-info-header">
+                        <Icon name="info" size={20} />
+                        <h3>Assessment Guidelines</h3>
+                    </div>
                     <ul>
                         <li>Ensure you are in a quiet environment</li>
                         <li>Complete all tests in a single session for best results</li>
                         <li>If using voice input, grant microphone permissions</li>
-                        <li>Take your time – this is not a competition</li>
+                        <li>Take your time - this is not a competition</li>
                     </ul>
                 </div>
             </div>

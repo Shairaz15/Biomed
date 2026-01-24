@@ -1,103 +1,174 @@
+/* ===== Tests Page Styles ===== */
+/* Antigravity floating cards with calm interactions */
+
 .tests {
-    padding-bottom: var(--spacing-2xl);
+    padding: var(--spacing-3xl) 0;
 }
 
 .tests-header {
     text-align: center;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-3xl);
 }
 
 .tests-header h1 {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
-/* Tests Grid */
+.tests-header p {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ===== Tests Grid ===== */
 .tests-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-3xl);
 }
 
+/* ===== Test Card ===== */
 .test-card {
-    text-align: center;
     padding: var(--spacing-xl);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
-
-.test-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
 }
 
 .test-card.selected {
     border-color: var(--color-accent);
-    background: var(--color-accent-soft);
+    box-shadow: var(--glow-teal-subtle);
 }
 
-.test-icon {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-md);
+.test-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-accent-subtle);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-smooth);
+    color: var(--color-accent);
+}
+
+.test-card:hover .test-icon-wrapper {
+    transform: scale(1.08);
+    box-shadow: var(--glow-teal-subtle);
 }
 
 .test-title {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
 }
 
 .test-description {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
-    margin-bottom: var(--spacing-md);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
 }
 
 .test-meta {
-    margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: center;
 }
 
 .test-duration {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: var(--bg-surface);
+    color: var(--color-text-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
     font-size: var(--font-size-xs);
+}
+
+.test-duration .icon {
     color: var(--color-text-muted);
 }
 
 .test-start-btn {
+    margin-top: auto;
     width: 100%;
 }
 
-/* Info Card */
+/* ===== Tests Info Card ===== */
 .tests-info {
     max-width: 600px;
     margin: 0 auto;
+    padding: var(--spacing-xl);
 }
 
-.tests-info h3 {
+.tests-info-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
+}
+
+.tests-info-header .icon {
+    color: var(--color-accent);
+}
+
+.tests-info-header h3 {
+    font-size: var(--font-size-lg);
+    margin: 0;
 }
 
 .tests-info ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .tests-info li {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
     padding: var(--spacing-sm) 0;
     padding-left: var(--spacing-lg);
     position: relative;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
 }
 
 .tests-info li::before {
-    content: "✓";
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--color-success);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    opacity: 0.6;
 }
 
-/* Responsive */
+.tests-info li:not(:last-child) {
+    border-bottom: 1px solid var(--glass-border);
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
+    .tests {
+        padding: var(--spacing-2xl) 0;
+    }
+
     .tests-grid {
         grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .test-icon-wrapper {
+        width: 64px;
+        height: 64px;
+    }
+
+    .test-icon-wrapper .icon {
+        width: 28px;
+        height: 28px;
     }
 }

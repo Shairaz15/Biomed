@@ -8,7 +8,7 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { Card, CardHeader, CardContent, RiskBadge, Button } from "../components/common";
+import { Card, CardHeader, CardContent, RiskBadge, Button, Icon } from "../components/common";
 import { PageWrapper } from "../components/layout";
 import { useMemoryResults, usePatternResults, useLanguageResults, clearAllTestData, STORAGE_KEYS } from "../hooks/useTestResults";
 import { generateSimulatedData, hasBaseline } from "../utils/simulateUserData";
@@ -183,7 +183,7 @@ export function Dashboard() {
                                     border: "1px solid rgba(255,255,255,0.1)",
                                     borderRadius: "8px",
                                 }}
-                                formatter={(value: any) => [value + unit, title]}
+                                formatter={(value) => [String(value ?? '') + unit, title]}
                             />
                             <Line
                                 connectNulls
@@ -206,9 +206,9 @@ export function Dashboard() {
             <div className="dashboard container">
                 <div className="dashboard-header">
                     <div>
-                        <h1>Performance Dashboard</h1>
+                        <h1>Your Cognitive Trends</h1>
                         <p className="text-secondary">
-                            Track your cognitive performance trends over time
+                            Track your cognitive performance patterns over time
                         </p>
                     </div>
                 </div>
@@ -226,27 +226,31 @@ export function Dashboard() {
                                 onClick={handleClearData}
                                 className="clear-data-btn"
                             >
-                                🗑️ Clear All Data
+                                <Icon name="trash" size={16} />
+                                Clear All Data
                             </Button>
                             <Button
                                 variant="primary"
                                 onClick={() => handleSimulateData("declining")}
                                 className="simulate-decline-btn"
                             >
-                                📉 + Declining (5 sessions)
+                                <Icon name="chart-trend" size={16} />
+                                + Declining (5 sessions)
                             </Button>
                             <Button
                                 variant="primary"
                                 onClick={() => handleSimulateData("stable")}
                                 className="simulate-stable-btn"
                             >
-                                📊 + Stable (5 sessions)
+                                <Icon name="chart-line-up" size={16} />
+                                + Stable (5 sessions)
                             </Button>
                         </div>
                         <p className="simulation-hint">
+                            <Icon name="info" size={14} />
                             {hasUserData
-                                ? `ℹ️ ${chartData.length} session(s) recorded. Add simulated sessions to see trend analysis.`
-                                : "⚠️ Take at least one test first to establish your baseline."}
+                                ? ` ${chartData.length} session(s) recorded. Add simulated sessions to see trend analysis.`
+                                : " Take at least one test first to establish your baseline."}
                         </p>
                     </CardContent>
                 </Card>
@@ -296,7 +300,9 @@ export function Dashboard() {
                     <Card className="no-data-card">
                         <CardContent>
                             <div className="no-data-message">
-                                <span className="no-data-icon">📊</span>
+                                <div className="no-data-icon">
+                                    <Icon name="chart-line-up" size={64} />
+                                </div>
                                 <h3>No Assessment Data Yet</h3>
                                 <p>Complete a cognitive test to see your personal performance trends.</p>
                                 <Button variant="primary" onClick={() => window.location.href = "/tests"}>
