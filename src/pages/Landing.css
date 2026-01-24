@@ -135,6 +135,7 @@
 .hero-stats {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--spacing-lg);
     padding: var(--spacing-md) var(--spacing-xl);
     background: var(--glass-bg);
