@@ -136,10 +136,19 @@ export function Landing() {
                 <div className="bg-noise" />
             </div>
 
-            {/* Hero Section - Bento Grid Layout */}
+            {/* Hero Section - Antigravity Layout */}
             <section className="hero">
                 <div className="hero-bento">
-                    {/* Main Hero Content */}
+                    {/* CENTERPIECE: Bio-Digital Brain */}
+                    <div className="logo-wrapper animate-fadeIn">
+                        <img
+                            src="/logo.png"
+                            alt="CogniTrack Brain Logo"
+                            className="antigravity-logo"
+                        />
+                    </div>
+
+                    {/* HERO CONTENT */}
                     <div className="hero-content animate-fadeInUp">
                         <span className="hero-badge animate-fadeIn">
                             <span className="badge-dot" />
@@ -147,9 +156,9 @@ export function Landing() {
                         </span>
 
                         <h1 className="hero-title">
-                            Track Cognitive Performance.
+                            <span className="brand-name">CogniTrack</span>
                             <br />
-                            <span className="text-gradient text-glow">Understand Trends Early.</span>
+                            <span className="text-gradient">Understand Trends Early.</span>
                         </h1>
 
                         <p className="hero-subtitle">
