@@ -307,11 +307,6 @@ export function Landing() {
                         <p className="footer-text">
                             Cognitive performance tracking for awareness, not diagnosis.
                         </p>
-                        <div className="footer-links">
-                            <a href="#privacy">Privacy</a>
-                            <a href="#terms">Terms</a>
-                            <a href="#about">About</a>
-                        </div>
                     </div>
                 </div>
             </footer>
