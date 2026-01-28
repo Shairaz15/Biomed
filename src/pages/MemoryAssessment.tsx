@@ -230,9 +230,14 @@ export function MemoryAssessment() {
                             Take your time — there's no pressure. Occasional variation is completely normal.
                         </p>
 
-                        <Button variant="primary" size="lg" onClick={startEncoding}>
-                            Begin Assessment
-                        </Button>
+                        <div className="button-group" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                            <Button variant="secondary" size="lg" onClick={() => navigate('/tests')}>
+                                Back
+                            </Button>
+                            <Button variant="primary" size="lg" onClick={startEncoding}>
+                                Begin Assessment
+                            </Button>
+                        </div>
                     </div>
                 );
 

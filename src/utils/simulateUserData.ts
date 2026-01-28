@@ -41,12 +41,13 @@ function addNoise(value: number, noisePercent: number = 0.05): number {
  * For stable: returns small random variation
  */
 function getTrendModifier(sessionIndex: number, pattern: SimulationPattern): number {
-    if (pattern === "declining") {
+    const isStable = pattern === "stable";
+    if (!isStable) {
         // Progressive decline: 0%, -10%, -20%, -30%, -40%
         return -0.10 * sessionIndex;
     } else {
-        // Stable: ±5% random variation
-        return (Math.random() * 0.10) - 0.05;
+        // Stable: Very minimal variation to avoid accidental trends
+        return (Math.random() * 0.02) - 0.01;
     }
 }
 
@@ -201,8 +202,11 @@ export function simulateLanguageResults(
 
     for (let i = 0; i < 5; i++) {
         const modifier = getTrendModifier(i + 1, pattern);
-        const wpm = Math.max(60, baseWpm + (modifier * 50));
-        const fluency = Math.max(30, Math.min(100, baseFluency + (modifier * 30)));
+        // Use percentage modification for natural decline
+        // stable: base * ~1.0
+        // declining: base * (1 + (-0.1 to -0.5)) -> 0.9x to 0.5x
+        const wpm = Math.max(40, baseWpm * (1 + modifier));
+        const fluency = Math.max(30, Math.min(100, baseFluency * (1 + modifier * 0.5)));
 
         results.push({
             id: `sim-language-${Date.now()}-${i}`,
@@ -267,4 +271,76 @@ export function generateSimulatedData(
  */
 export function hasBaseline(baseline: BaselineData): boolean {
     return !!(baseline.reaction || baseline.memory || baseline.pattern || baseline.language);
+}
+
+/**
+ * Returns a mock baseline with healthy default values.
+ * Used for "Mock Data" simulation when user hasn't taken tests.
+ */
+export function getMockBaseline(): BaselineData {
+    const now = new Date();
+    return {
+        reaction: {
+            sessionId: "mock-base-rxn",
+            timestamp: now,
+            rounds: [],
+            aggregates: { avg: 350, median: 350, min: 300, max: 400, variance: 500, consistencyScore: 0.85, fatigueSlope: 2 },
+            falseStartCount: 0,
+            missedStimulusCount: 0,
+            derivedFeatures: { stabilityIndex: 0.85, fatigueSlope: 2, attentionVariability: 0.1, baselineDeviation: 0, anomalyScore: 0 }
+        },
+        memory: {
+            timestamp: now,
+            totalWords: 10,
+            correctCount: 7,
+            accuracy: 0.7
+        },
+        pattern: {
+            id: "mock-base-pat",
+            sessionId: "mock-base-pat",
+            timestamp: now,
+            metrics: {
+                maxLevelReached: 4,
+                totalRounds: 10,
+                correctRounds: 8,
+                averageResponseLatency: 800,
+                averageCompletionTime: 4000,
+                inputErrors: 1,
+                falseInputs: 0,
+                retries: 0
+            },
+            derivedFeatures: {
+                sequenceAccuracyTrend: 0.05,
+                learningRate: 12,
+                errorGrowthRate: 0.1,
+                memoryLoadTolerance: 85,
+                patternStabilityIndex: 88
+            },
+            rawSequenceData: []
+        },
+        language: {
+            id: "mock-base-lang",
+            sessionId: "mock-base-lang",
+            timestamp: now,
+            transcript: "Mock baseline transcript.",
+            rawMetrics: {
+                wordCount: 150,
+                speechDuration: 60000,
+                pauseCount: 2,
+                pauseDurationAvg: 500,
+                fillerWordCount: 1,
+                repetitions: 0,
+                uniqueWordCount: 80
+            },
+            derivedFeatures: {
+                wpm: 120,
+                lexicalDiversity: 0.6,
+                fluencyIndex: 85,
+                hesitationIndex: 0.05,
+                speechStability: 85,
+                coherenceProxy: 80
+            },
+            explainability: { keyFactors: [] }
+        }
+    };
 }

@@ -9,9 +9,7 @@
 }
 
 /* Background states - clinical-calm colors */
-.bg-neutral {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-}
+/* bg-neutral removed to use page default */
 
 .bg-ready {
     background: linear-gradient(135deg, #1e293b 0%, #312e81 100%);
@@ -87,127 +85,9 @@
 
 /* Instructions */
 .instruction-text {
-    font-size: var(--font-size-lg);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--spacing-xl);
-    line-height: 1.6;
-}
-
-.instruction-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--spacing-xl) 0;
-    text-align: left;
-}
-
-.instruction-list li {
-    padding: var(--spacing-sm) 0;
-    padding-left: var(--spacing-lg);
-    position: relative;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-base);
-}
-
-.instruction-list li::before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    color: var(--color-accent);
-}
-
-/* Start area */
-.reaction-start,
-.reaction-instructions,
-.reaction-complete {
-    animation: fadeIn 0.3s ease-out;
-}
-
-/* Results summary */
-.result-summary {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-xl);
-    margin: var(--spacing-xl) 0;
-}
-
-.result-item {
-    text-align: center;
-}
-
-.result-label {
-    display: block;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    margin-bottom: var(--spacing-xs);
-}
-
-.result-value {
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
+    font-size: 1rem;
     color: var(--color-text-primary);
-}
-
-/* Tap hint */
-/* Tap hint */
-.tap-hint {
-    position: absolute;
-    bottom: var(--spacing-xl);
-    left: 0;
-    width: 100%;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: var(--font-size-lg);
     font-weight: 500;
-    animation: pulse 2s ease-in-out infinite;
-    pointer-events: none;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Result Actions */
-.result-actions {
-    display: flex;
-    gap: var(--spacing-md);
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: var(--spacing-lg);
-}
-
-/* ===== Assessment Phase (Standardized Instruction Style) ===== */
-.assessment-phase {
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
-    animation: fadeIn 0.4s ease-out;
-}
-
-.phase-icon {
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-}
-
-.phase-description {
-    font-size: 1.1rem;
-    color: var(--color-text-secondary, #cbd5e1);
-    margin-bottom: 2rem;
-    line-height: 1.6;
-}
-
-.instructions-phase h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--color-text-primary, #f8fafc);
 }
 
 .instructions-list {

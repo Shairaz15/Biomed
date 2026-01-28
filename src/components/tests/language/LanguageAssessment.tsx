@@ -211,7 +211,7 @@ export function LanguageAssessment() {
                         </p>
 
                         <div className="button-group">
-                            <Button variant="secondary" onClick={() => navigate('/tests')}>Cancel</Button>
+                            <Button variant="secondary" onClick={() => navigate('/tests')}>Back</Button>
                             <Button variant="primary" onClick={() => setPhase('permission')}>Start</Button>
                         </div>
                     </div>

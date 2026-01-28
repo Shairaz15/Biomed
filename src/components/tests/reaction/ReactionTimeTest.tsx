@@ -13,6 +13,8 @@ import { createReactionTestResult } from "./reactionFeatures";
 import { getReactionFeedback } from "../../../utils/normativeStats";
 import "./ReactionTimeTest.css";
 
+import { PageWrapper } from "../../layout";
+
 export function ReactionTimeTest() {
     const navigate = useNavigate();
     const [state, setState] = useState<ReactionState>("idle");
@@ -187,136 +189,149 @@ export function ReactionTimeTest() {
             case "response":
                 return "bg-success";
             default:
-                return "bg-neutral";
+                return ""; // Default to page background for idle/instructions
         }
     };
 
     return (
-        <div
-            className={`reaction-test ${getBackgroundClass()}`}
-            onClick={["wait", "calibration", "stimulus"].includes(state) ? handleClick : undefined}
-        >
-            <div className="reaction-content">
-                {/* Progress indicator */}
-                <div className="reaction-progress">
-                    <span className="round-indicator">
-                        Round {Math.min(roundIndex + 1, config.totalRounds)} of {config.totalRounds}
-                    </span>
-                    {roundIndex < config.calibrationRounds && state !== "idle" && state !== "instructions" && (
-                        <span className="calibration-badge">Calibration</span>
-                    )}
+        <PageWrapper>
+            <div className="reaction-test-container container">
+                <div
+                    className={`reaction-test ${getBackgroundClass()}`}
+                    onClick={["wait", "calibration", "stimulus"].includes(state) ? handleClick : undefined}
+                >
+                    <div className="reaction-content">
+                        {/* Progress indicator */}
+                        {state !== "idle" && (
+                            <div className="reaction-progress">
+                                <span className="round-indicator">
+                                    Round {Math.min(roundIndex + 1, config.totalRounds)} of {config.totalRounds}
+                                </span>
+                                {roundIndex < config.calibrationRounds && state !== "instructions" && (
+                                    <span className="calibration-badge">Calibration</span>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Main message - Hidden during instructions to prevent double header */}
+                        {!["idle", "instructions"].includes(state) && (
+                            <h1 className="reaction-message">{message}</h1>
+                        )}
+
+                        {/* Reaction time display */}
+                        {currentReactionTime !== null && (
+                            <div className="reaction-time-display">
+                                <span className="time-value">{currentReactionTime}</span>
+                                <span className="time-unit">ms</span>
+                            </div>
+                        )}
+
+                        {/* Idle state */}
+                        {state === "idle" && (
+                            <div className="assessment-phase instructions-phase">
+                                <div className="phase-icon">⚡</div>
+                                <h2>Reaction Time Assessment</h2>
+                                <p className="phase-description">
+                                    This task measures your response latency to visual stimuli.
+                                </p>
+
+                                <div className="instructions-list">
+                                    <div className="instruction-item">
+                                        <span className="instruction-number">1</span>
+                                        <span className="instruction-text">Wait for the screen to change color</span>
+                                    </div>
+                                    <div className="instruction-item">
+                                        <span className="instruction-number">2</span>
+                                        <span className="instruction-text">Click or tap as quickly as possible when it does</span>
+                                    </div>
+                                    <div className="instruction-item">
+                                        <span className="instruction-number">3</span>
+                                        <span className="instruction-text">Complete 6 rounds (first round is calibration)</span>
+                                    </div>
+                                </div>
+
+                                <p className="reassurance-text">
+                                    Respond as quickly as possible. Occasional variation is completely normal.
+                                </p>
+
+                                <div className="button-group" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                                    <Button variant="secondary" size="lg" onClick={() => navigate('/tests')}>
+                                        Back
+                                    </Button>
+                                    <Button variant="primary" size="lg" onClick={handleStart}>
+                                        Begin Assessment
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Instructions state - quick reminder before starting */}
+                        {state === "instructions" && (
+                            <div className="assessment-phase">
+                                <p className="phase-description">
+                                    Click immediately when the screen changes color.
+                                </p>
+                                <Button variant="primary" size="lg" onClick={handleContinueFromInstructions}>
+                                    Start
+                                </Button>
+                            </div>
+                        )}
+
+                        {/* Test complete state */}
+                        {state === "test_complete" && (
+                            <div className="reaction-complete">
+                                <div className="result-card">
+                                    {/* Inner header removed here */}
+
+                                    {(() => {
+                                        const validRounds = rounds.filter((r) => !r.isCalibration && !r.isFalseStart && !r.isTimeout);
+                                        const avgTime = Math.round(validRounds.reduce((a, b) => a + (b.reactionTime || 0), 0) / validRounds.length);
+                                        const fastestTime = Math.min(...validRounds.map(r => r.reactionTime || 9999));
+                                        const feedback = getReactionFeedback(avgTime);
+
+                                        // Map feedback color to CSS class
+                                        const colorClass = `text-${feedback.color}`;
+
+                                        return (
+                                            <>
+                                                <div className="result-metrics-grid">
+                                                    <div className="result-metric primary-metric">
+                                                        <span className="metric-label">Fastest Response</span>
+                                                        <span className="metric-value">{fastestTime} <span className="unit">ms</span></span>
+                                                    </div>
+                                                    <div className="result-metric secondary-metric">
+                                                        <span className="metric-label">Average Response</span>
+                                                        <span className="metric-value">{avgTime} <span className="unit">ms</span></span>
+                                                    </div>
+                                                </div>
+
+                                                <div className={`feedback-section ${colorClass}Border`}>
+                                                    <h3 className={`feedback-title ${colorClass}`}>{feedback.category}</h3>
+                                                    <p className="feedback-message">{feedback.message}</p>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+
+                                    <div className="result-actions">
+                                        <Button variant="primary" size="lg" onClick={handleFinish}>
+                                            View Dashboard
+                                        </Button>
+                                        <Button variant="secondary" size="lg" onClick={() => navigate("/tests")}>
+                                            Retry
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Tap area hint */}
+                        {["wait", "calibration", "stimulus"].includes(state) && (
+                            <p className="tap-hint">Click or tap anywhere to respond</p>
+                        )}
+                    </div>
                 </div>
-
-                {/* Main message */}
-                <h1 className="reaction-message">{message}</h1>
-
-                {/* Reaction time display */}
-                {currentReactionTime !== null && (
-                    <div className="reaction-time-display">
-                        <span className="time-value">{currentReactionTime}</span>
-                        <span className="time-unit">ms</span>
-                    </div>
-                )}
-
-                {/* Idle state */}
-                {state === "idle" && (
-                    <div className="assessment-phase instructions-phase">
-                        <div className="phase-icon">⚡</div>
-                        <h2>Reaction Time Assessment</h2>
-                        <p className="phase-description">
-                            This task measures your response latency to visual stimuli.
-                        </p>
-
-                        <div className="instructions-list">
-                            <div className="instruction-item">
-                                <span className="instruction-number">1</span>
-                                <span className="instruction-text">Wait for the screen to change color</span>
-                            </div>
-                            <div className="instruction-item">
-                                <span className="instruction-number">2</span>
-                                <span className="instruction-text">Click or tap as quickly as possible when it does</span>
-                            </div>
-                            <div className="instruction-item">
-                                <span className="instruction-number">3</span>
-                                <span className="instruction-text">Complete 6 rounds (first round is calibration)</span>
-                            </div>
-                        </div>
-
-                        <p className="reassurance-text">
-                            Respond as quickly as possible. Occasional variation is completely normal.
-                        </p>
-
-                        <Button variant="primary" size="lg" onClick={handleStart}>
-                            Begin Assessment
-                        </Button>
-                    </div>
-                )}
-
-                {/* Instructions state - quick reminder before starting */}
-                {state === "instructions" && (
-                    <div className="assessment-phase">
-                        <p className="phase-description">
-                            Click immediately when the screen changes color.
-                        </p>
-                        <Button variant="primary" size="lg" onClick={handleContinueFromInstructions}>
-                            Start
-                        </Button>
-                    </div>
-                )}
-
-                {/* Test complete state */}
-                {state === "test_complete" && (
-                    <div className="reaction-complete">
-                        <div className="result-card">
-                            {/* Inner header removed here */}
-
-                            {(() => {
-                                const validRounds = rounds.filter((r) => !r.isCalibration && !r.isFalseStart && !r.isTimeout);
-                                const avgTime = Math.round(validRounds.reduce((a, b) => a + (b.reactionTime || 0), 0) / validRounds.length);
-                                const fastestTime = Math.min(...validRounds.map(r => r.reactionTime || 9999));
-                                const feedback = getReactionFeedback(avgTime);
-
-                                // Map feedback color to CSS class
-                                const colorClass = `text-${feedback.color}`;
-
-                                return (
-                                    <>
-                                        <div className="result-metrics-grid">
-                                            <div className="result-metric primary-metric">
-                                                <span className="metric-label">Fastest Response</span>
-                                                <span className="metric-value">{fastestTime} <span className="unit">ms</span></span>
-                                            </div>
-                                            <div className="result-metric secondary-metric">
-                                                <span className="metric-label">Average Response</span>
-                                                <span className="metric-value">{avgTime} <span className="unit">ms</span></span>
-                                            </div>
-                                        </div>
-
-                                        <div className={`feedback-section ${colorClass}Border`}>
-                                            <h3 className={`feedback-title ${colorClass}`}>{feedback.category}</h3>
-                                            <p className="feedback-message">{feedback.message}</p>
-                                        </div>
-                                    </>
-                                );
-                            })()}
-
-                            <div className="result-actions">
-                                <Button variant="primary" size="lg" onClick={handleFinish}>
-                                    View Dashboard
-                                </Button>
-                                <Button variant="secondary" size="lg" onClick={() => navigate("/tests")}>
-                                    Retry
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Tap area hint */}
-                {["wait", "calibration", "stimulus"].includes(state) && (
-                    <p className="tap-hint">Click or tap anywhere to respond</p>
-                )}
             </div>
-        </div>
+        </PageWrapper>
     );
 }

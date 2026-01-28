@@ -11,11 +11,17 @@ import {
 import { Card, CardHeader, CardContent, RiskBadge, Button, Icon } from "../components/common";
 import { PageWrapper } from "../components/layout";
 import { useMemoryResults, usePatternResults, useLanguageResults, clearAllTestData, STORAGE_KEYS } from "../hooks/useTestResults";
-import { generateSimulatedData, hasBaseline } from "../utils/simulateUserData";
+import { generateSimulatedData, hasBaseline, getMockBaseline } from "../utils/simulateUserData";
 import { predictTrend } from "../ml";
 import type { TrendPrediction } from "../ml";
 import type { ReactionTestResult } from "../components/tests/reaction/reactionFeatures";
 import "./Dashboard.css";
+
+// ... inside Dashboard component ...
+
+
+
+
 
 export function Dashboard() {
     // Load test results
@@ -57,13 +63,43 @@ export function Dashboard() {
         }
     };
 
+    // Handle Mock Data (No Baseline Required)
+    const handleMockData = (pattern: "stable" | "declining") => {
+        const baseline = getMockBaseline();
+        const simulated = generateSimulatedData(baseline, pattern);
+
+        // Append simulated data to localStorage
+        try {
+            if (simulated.reaction.length > 0) {
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.reactionResults) || "[]");
+                localStorage.setItem(STORAGE_KEYS.reactionResults, JSON.stringify([...existing, ...simulated.reaction]));
+            }
+            if (simulated.memory.length > 0) {
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.memoryResults) || "[]");
+                localStorage.setItem(STORAGE_KEYS.memoryResults, JSON.stringify([...existing, ...simulated.memory]));
+            }
+            if (simulated.pattern.length > 0) {
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.patternResults) || "[]");
+                localStorage.setItem(STORAGE_KEYS.patternResults, JSON.stringify([...existing, ...simulated.pattern]));
+            }
+            if (simulated.language.length > 0) {
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.languageResults) || "[]");
+                localStorage.setItem(STORAGE_KEYS.languageResults, JSON.stringify([...existing, ...simulated.language]));
+            }
+            refreshData();
+        } catch (error) {
+            console.error("Failed to save mock data:", error);
+            alert("Failed to generate mock data.");
+        }
+    };
+
     // Handle Simulate Data
     const handleSimulateData = (pattern: "stable" | "declining") => {
         const baseline = {
-            reaction: reactionResults.length > 0 ? reactionResults[0] : undefined,
-            memory: memoryResults.length > 0 ? memoryResults[0] : undefined,
-            pattern: patternResults.length > 0 ? patternResults[0] : undefined,
-            language: languageResults.length > 0 ? languageResults[0] : undefined,
+            reaction: reactionResults.length > 0 ? reactionResults[reactionResults.length - 1] : undefined,
+            memory: memoryResults.length > 0 ? memoryResults[memoryResults.length - 1] : undefined,
+            pattern: patternResults.length > 0 ? patternResults[patternResults.length - 1] : undefined,
+            language: languageResults.length > 0 ? languageResults[languageResults.length - 1] : undefined,
         };
 
         if (!hasBaseline(baseline)) {
@@ -238,7 +274,7 @@ export function Dashboard() {
                                 className="simulate-decline-btn"
                             >
                                 <Icon name="chart-trend" size={16} />
-                                + Declining (5 sessions)
+                                + Declining (User Baseline)
                             </Button>
                             <Button
                                 variant="primary"
@@ -246,7 +282,27 @@ export function Dashboard() {
                                 className="simulate-stable-btn"
                             >
                                 <Icon name="chart-line-up" size={16} />
-                                + Stable (5 sessions)
+                                + Stable (User Baseline)
+                            </Button>
+                        </div>
+
+                        <div className="simulation-buttons mt-4 pt-4 border-t border-white/10">
+                            <h4 className="text-sm font-medium text-secondary mb-2 w-full">Mock Data (No Baseline Required)</h4>
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleMockData("declining")}
+                                className="simulate-decline-btn"
+                            >
+                                <Icon name="chart-trend" size={16} />
+                                Mock Declining
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleMockData("stable")}
+                                className="simulate-stable-btn"
+                            >
+                                <Icon name="chart-line-up" size={16} />
+                                Mock Stable
                             </Button>
                         </div>
                         <p className="simulation-hint">
