@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Icon } from "../components/common";
+import { Button, Icon, GoogleSignInButton, UserMenu } from "../components/common";
+import { useAuth } from "../contexts/AuthContext";
 import { MAIN_DISCLAIMER } from "../ethics/disclaimer";
 import { DEMO_USER } from "../demo/demoProfile";
 import "./Landing.css";
 
 export function Landing() {
     const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+    const { isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
 
     // Trend Animation States
@@ -128,6 +130,22 @@ export function Landing() {
 
     return (
         <div className="landing">
+            {/* Authentication Header */}
+            <header className="landing-header">
+                <div className="header-content">
+                    <span className="header-brand">CogniTrack</span>
+                    <div className="header-auth">
+                        {loading ? (
+                            <div className="auth-loading" />
+                        ) : isAuthenticated ? (
+                            <UserMenu />
+                        ) : (
+                            <GoogleSignInButton />
+                        )}
+                    </div>
+                </div>
+            </header>
+
             {/* Background Effects - Aurora mesh */}
             <div className="landing-bg">
                 <div className="bg-aurora-mesh" />

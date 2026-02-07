@@ -99,3 +99,47 @@ export function getOverallTrendDirection(slopes: TrendSlopes): number {
     // Normalize to -1 to 1 range (using sigmoid-like transformation)
     return Math.tanh(avgSlope * 1000); // Scale factor for sensitivity
 }
+
+/**
+ * Analyzes trend and returns risk level, trend direction, and confidence.
+ * This is a simplified interface for UI display.
+ */
+export interface TrendAnalysisResult {
+    risk: 'low' | 'medium' | 'high';
+    trend: 'stable' | 'declining' | 'improving';
+    confidence: number;
+}
+
+export function analyzeTrend(sessions: SessionDataPoint[]): TrendAnalysisResult {
+    if (sessions.length < 2) {
+        return { risk: 'low', trend: 'stable', confidence: 0.5 };
+    }
+
+    const slopes = analyzeTrends(sessions);
+    const overallDirection = getOverallTrendDirection(slopes);
+
+    // Determine trend
+    let trend: TrendAnalysisResult['trend'];
+    if (overallDirection < -0.1) {
+        trend = 'declining';
+    } else if (overallDirection > 0.1) {
+        trend = 'improving';
+    } else {
+        trend = 'stable';
+    }
+
+    // Determine risk
+    let risk: TrendAnalysisResult['risk'];
+    if (trend === 'declining' && Math.abs(overallDirection) > 0.5) {
+        risk = 'high';
+    } else if (trend === 'declining') {
+        risk = 'medium';
+    } else {
+        risk = 'low';
+    }
+
+    // Confidence based on number of sessions
+    const confidence = Math.min(0.95, 0.5 + sessions.length * 0.1);
+
+    return { risk, trend, confidence };
+}

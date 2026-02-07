@@ -12,6 +12,7 @@ import { Card, CardHeader, CardContent, RiskBadge, Button, Icon } from "../compo
 import { PageWrapper } from "../components/layout";
 import { useMemoryResults, usePatternResults, useLanguageResults, clearAllTestData, STORAGE_KEYS } from "../hooks/useTestResults";
 import { generateSimulatedData, hasBaseline, getMockBaseline } from "../utils/simulateUserData";
+import { useWeeklyReminder } from "../hooks/useWeeklyReminder";
 import { predictTrend } from "../ml";
 import type { TrendPrediction } from "../ml";
 import type { ReactionTestResult } from "../components/tests/reaction/reactionFeatures";
@@ -29,6 +30,9 @@ export function Dashboard() {
     const { results: memoryResults } = useMemoryResults();
     const { results: patternResults } = usePatternResults();
     const { results: languageResults } = useLanguageResults();
+
+    // Weekly Reminder Hook
+    useWeeklyReminder();
 
     // ML Prediction State
     const [mlPrediction, setMlPrediction] = useState<TrendPrediction | null>(null);
