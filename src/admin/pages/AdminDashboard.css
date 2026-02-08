@@ -5,13 +5,17 @@
 .admin-layout {
     display: flex;
     min-height: 100vh;
-    background: var(--bg-primary, #0a0a14);
+    background: #0a0a0f !important;
+    background-color: #0a0a0f !important;
+    color: #f1f5f9;
 }
 
 .admin-content {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
+    background: #0a0a0f !important;
+    background-color: #0a0a0f !important;
 }
 
 .admin-header {

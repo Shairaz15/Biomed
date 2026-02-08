@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardContent, RiskBadge, Button, Icon } from "../components/common";
 import { PageWrapper } from "../components/layout";
+import { useAuth } from "../contexts/AuthContext";
 import { useMemoryResults, usePatternResults, useLanguageResults, clearAllTestData, STORAGE_KEYS } from "../hooks/useTestResults";
 import { generateSimulatedData, hasBaseline, getMockBaseline } from "../utils/simulateUserData";
 import { useWeeklyReminder } from "../hooks/useWeeklyReminder";
@@ -33,6 +34,9 @@ export function Dashboard() {
 
     // Weekly Reminder Hook
     useWeeklyReminder();
+
+    // Auth for admin check
+    const { isAdmin } = useAuth();
 
     // ML Prediction State
     const [mlPrediction, setMlPrediction] = useState<TrendPrediction | null>(null);
@@ -256,67 +260,69 @@ export function Dashboard() {
                     </Button>
                 </div>
 
-                {/* Simulation Controls - Always visible */}
-                <Card className="simulation-controls">
-                    <CardHeader
-                        title="Data Controls"
-                        subtitle="Take a test to establish baseline, then simulate trends"
-                    />
-                    <CardContent>
-                        <div className="simulation-buttons">
-                            <Button
-                                variant="secondary"
-                                onClick={handleClearData}
-                                className="clear-data-btn"
-                            >
-                                <Icon name="trash" size={16} />
-                                Clear All Data
-                            </Button>
-                            <Button
-                                variant="primary"
-                                onClick={() => handleSimulateData("declining")}
-                                className="simulate-decline-btn"
-                            >
-                                <Icon name="chart-trend" size={16} />
-                                + Declining (User Baseline)
-                            </Button>
-                            <Button
-                                variant="primary"
-                                onClick={() => handleSimulateData("stable")}
-                                className="simulate-stable-btn"
-                            >
-                                <Icon name="chart-line-up" size={16} />
-                                + Stable (User Baseline)
-                            </Button>
-                        </div>
+                {/* Simulation Controls - Admin only */}
+                {isAdmin && (
+                    <Card className="simulation-controls">
+                        <CardHeader
+                            title="Data Controls (Admin)"
+                            subtitle="Take a test to establish baseline, then simulate trends"
+                        />
+                        <CardContent>
+                            <div className="simulation-buttons">
+                                <Button
+                                    variant="secondary"
+                                    onClick={handleClearData}
+                                    className="clear-data-btn"
+                                >
+                                    <Icon name="trash" size={16} />
+                                    Clear All Data
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => handleSimulateData("declining")}
+                                    className="simulate-decline-btn"
+                                >
+                                    <Icon name="chart-trend" size={16} />
+                                    + Declining (User Baseline)
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => handleSimulateData("stable")}
+                                    className="simulate-stable-btn"
+                                >
+                                    <Icon name="chart-line-up" size={16} />
+                                    + Stable (User Baseline)
+                                </Button>
+                            </div>
 
-                        <div className="simulation-buttons mt-4 pt-4 border-t border-white/10">
-                            <h4 className="text-sm font-medium text-secondary mb-2 w-full">Mock Data (No Baseline Required)</h4>
-                            <Button
-                                variant="secondary"
-                                onClick={() => handleMockData("declining")}
-                                className="simulate-decline-btn"
-                            >
-                                <Icon name="chart-trend" size={16} />
-                                Mock Declining
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                onClick={() => handleMockData("stable")}
-                                className="simulate-stable-btn"
-                            >
-                                <Icon name="chart-line-up" size={16} />
-                                Mock Stable
-                            </Button>
-                        </div>
-                        <p className="simulation-hint">
-                            <Icon name="info" size={14} />
-                            {hasUserData
-                                ? ` ${chartData.length} session(s) recorded. Add simulated sessions to see trend analysis.`
-                                : " Take at least one test first to establish your baseline."}
-                        </p>
-                    </CardContent>
-                </Card>
+                            <div className="simulation-buttons mt-4 pt-4 border-t border-white/10">
+                                <h4 className="text-sm font-medium text-secondary mb-2 w-full">Mock Data (No Baseline Required)</h4>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => handleMockData("declining")}
+                                    className="simulate-decline-btn"
+                                >
+                                    <Icon name="chart-trend" size={16} />
+                                    Mock Declining
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => handleMockData("stable")}
+                                    className="simulate-stable-btn"
+                                >
+                                    <Icon name="chart-line-up" size={16} />
+                                    Mock Stable
+                                </Button>
+                            </div>
+                            <p className="simulation-hint">
+                                <Icon name="info" size={14} />
+                                {hasUserData
+                                    ? ` ${chartData.length} session(s) recorded. Add simulated sessions to see trend analysis.`
+                                    : " Take at least one test first to establish your baseline."}
+                            </p>
+                        </CardContent>
+                    </Card>
+                )}
 
                 {/* Your Trend Analysis - Shows when 3+ sessions and ML prediction exists */}
                 {chartData.length >= 3 && mlPrediction && (

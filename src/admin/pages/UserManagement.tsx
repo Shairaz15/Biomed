@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { AdminSidebar } from '../components/AdminSidebar';
 import { MOCK_USERS } from '../data/mockData';
 import type { AdminUser } from '../data/mockData';
+import './UserManagement.css';
 
 export function UserManagement() {
     const { user: currentUser } = useAuth();
