@@ -19,6 +19,45 @@
     margin: 0 auto;
 }
 
+/* ===== Sign-In Card ===== */
+.tests-signin-card {
+    max-width: 600px;
+    margin: 0 auto var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    text-align: center;
+    border: 1px solid var(--glass-border);
+}
+
+.tests-signin-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.tests-signin-header .icon {
+    color: var(--color-accent);
+}
+
+.tests-signin-header h3 {
+    font-size: var(--font-size-lg);
+    margin: 0;
+    color: var(--color-text-primary);
+}
+
+.tests-signin-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-lg);
+    line-height: var(--line-height-relaxed);
+}
+
+.tests-signin-card .google-signin-container {
+    display: flex;
+    justify-content: center;
+}
+
 /* ===== Tests Grid ===== */
 .tests-grid {
     display: grid;

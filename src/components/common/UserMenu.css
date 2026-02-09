@@ -17,6 +17,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--text-primary, #fff);
+    overflow: visible;
 }
 
 .user-menu-trigger:hover {
@@ -24,10 +25,16 @@
 }
 
 .user-avatar {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .user-avatar-placeholder {
@@ -46,10 +53,11 @@
 .user-name {
     font-size: 0.9rem;
     font-weight: 500;
-    max-width: 100px;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--color-text-primary, #fff);
 }
 
 .dropdown-arrow {

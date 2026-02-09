@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { Icon } from "../common";
+import { Icon, UserMenu, GoogleSignInButton } from "../common";
+import { useAuth } from "../../contexts/AuthContext";
 import { FOOTER_DISCLAIMER } from "../../ethics/disclaimer";
 import "./PageWrapper.css";
 
@@ -17,6 +18,7 @@ export function PageWrapper({
 }: PageWrapperProps) {
     const location = useLocation();
     const currentPath = location.pathname;
+    const { isAuthenticated, loading } = useAuth();
 
     const isActive = (path: string) => currentPath === path;
 
@@ -47,6 +49,16 @@ export function PageWrapper({
                                 Tests
                             </a>
                         </nav>
+                        {/* User Profile Menu or Sign In Button */}
+                        <div className="header-auth">
+                            {loading ? (
+                                <div className="auth-loading" />
+                            ) : isAuthenticated ? (
+                                <UserMenu />
+                            ) : (
+                                <GoogleSignInButton />
+                            )}
+                        </div>
                     </div>
                 </header>
             )}

@@ -46,6 +46,7 @@ export function UserMenu() {
                         src={user.photoURL}
                         alt={user.displayName || 'User'}
                         className="user-avatar"
+                        referrerPolicy="no-referrer"
                     />
                 ) : (
                     <div className="user-avatar-placeholder">

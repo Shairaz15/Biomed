@@ -56,6 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                         // This grants admin access without needing Cloud Functions
                         const LOCAL_ADMIN_EMAILS = [
                             'shairaz102938@gmail.com', // Your admin email
+                            'raviraj.sashank@gmail.com', // Additional admin
                             // Add more admin emails as needed
                         ];
 

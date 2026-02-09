@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button, Icon } from "../components/common";
+import { Card, Button, Icon, GoogleSignInButton } from "../components/common";
 import type { IconName } from "../components/common";
+import { useAuth } from "../contexts/AuthContext";
 import { PageWrapper } from "../components/layout";
 import "./Tests.css";
 
@@ -49,6 +50,7 @@ const TESTS: TestInfo[] = [
 export function Tests() {
     const navigate = useNavigate();
     const [selectedTest, setSelectedTest] = useState<TestType | null>(null);
+    const { isAuthenticated, loading } = useAuth();
 
     const handleStartTest = (testId: TestType) => {
         if (testId === "pattern") {
@@ -67,6 +69,28 @@ export function Tests() {
                         Complete the following tests to assess your cognitive performance.
                         Each test takes 1-2 minutes.
                     </p>
+                </div>
+
+                {/* Google Sign-In Section */}
+                <div className="tests-signin-card glass-card animate-fadeIn">
+                    <div className="tests-signin-header">
+                        <Icon name="privacy" size={20} />
+                        <h3>{isAuthenticated ? "Signed In" : "Save Your Progress"}</h3>
+                    </div>
+                    {loading ? (
+                        <p className="tests-signin-text">Loading...</p>
+                    ) : isAuthenticated ? (
+                        <p className="tests-signin-text">
+                            ✓ Your progress will be saved to your account.
+                        </p>
+                    ) : (
+                        <>
+                            <p className="tests-signin-text">
+                                Sign in with Google to save your assessment results across devices and track your cognitive trends over time.
+                            </p>
+                            <GoogleSignInButton />
+                        </>
+                    )}
                 </div>
 
                 <div className="tests-grid">

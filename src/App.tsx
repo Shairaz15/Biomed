@@ -32,14 +32,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/tests"
-            element={
-              <ProtectedRoute>
-                <Tests />
-              </ProtectedRoute>
-            }
-          />
+
+          {/* Tests page - public (has sign-in option) */}
+          <Route path="/tests" element={<Tests />} />
           <Route
             path="/test/memory"
             element={
