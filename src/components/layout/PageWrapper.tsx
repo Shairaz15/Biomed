@@ -57,9 +57,9 @@ export function PageWrapper({
                                 <div className="auth-loading" />
                             ) : isAuthenticated ? (
                                 <UserMenu />
-                            ) : (
+                            ) : currentPath !== "/tests" ? (
                                 <GoogleSignInButton />
-                            )}
+                            ) : null}
                         </div>
                     </div>
                 </header>
@@ -106,15 +106,7 @@ export function PageWrapper({
                     </span>
                     <span className="mobile-nav-label">Tests</span>
                 </a>
-                <a
-                    href="/help"
-                    className={`mobile-nav-item ${isActive("/help") ? "active" : ""}`}
-                >
-                    <span className="mobile-nav-icon">
-                        <Icon name="info" size={20} />
-                    </span>
-                    <span className="mobile-nav-label">Help</span>
-                </a>
+
             </nav>
         </div>
     );

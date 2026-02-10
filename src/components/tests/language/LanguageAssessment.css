@@ -321,3 +321,101 @@
     font-weight: 600;
     color: #f1f5f9;
 }
+
+/* Normative Feedback Badge */
+.feedback-badge-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.feedback-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.feedback-badge.positive {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.feedback-badge.neutral {
+    background: rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.feedback-badge.attention {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+    .language-container {
+        padding: 1rem 0.75rem;
+    }
+
+    .intro-card,
+    .permission-card,
+    .phase-card,
+    .results-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+    }
+
+    .metric label {
+        margin-bottom: 0;
+    }
+
+    .insights-grid {
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .feedback-badge {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .button-group .btn,
+    .button-group button {
+        width: 100%;
+    }
+
+    .results-card h1 {
+        font-size: 1.5rem;
+    }
+
+    .timer {
+        font-size: 2.5rem;
+    }
+
+    .instructions-phase h2 {
+        font-size: 1.5rem;
+    }
+}

@@ -176,6 +176,10 @@
         display: none;
     }
 
+    .header-auth {
+        display: none;
+    }
+
     .mobile-nav {
         display: flex;
     }
@@ -185,6 +189,12 @@
     }
 
     .page-footer {
-        display: none;
+        padding: var(--spacing-sm) 0;
+        margin-bottom: calc(60px + env(safe-area-inset-bottom));
+    }
+
+    .footer-disclaimer {
+        font-size: 10px;
+        padding: 0 var(--spacing-sm);
     }
 }

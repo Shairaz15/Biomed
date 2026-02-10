@@ -269,6 +269,7 @@
 .session-table-wrapper {
     overflow-x: auto;
     border-radius: var(--radius-lg);
+    -webkit-overflow-scrolling: touch;
 }
 
 .session-table {
@@ -551,5 +552,31 @@
     .session-table td {
         padding: var(--spacing-sm);
         font-size: var(--font-size-xs);
+        white-space: nowrap;
+    }
+
+    .dashboard-header h1 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .mode-toggle {
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: var(--font-size-xs);
+    }
+
+    .session-table-wrapper {
+        position: relative;
+    }
+
+    .session-table-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 30px;
+        background: linear-gradient(to left, var(--bg-deep, #050505), transparent);
+        pointer-events: none;
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
     }
 }

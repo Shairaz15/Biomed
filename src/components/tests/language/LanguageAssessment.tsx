@@ -319,8 +319,8 @@ export function LanguageAssessment() {
                                 return (
                                     <>
                                         {/* Normative Feedback Badge */}
-                                        <div className="w-full text-center mb-2">
-                                            <span className={`insight-chip ${feedback.category === 'Exceptional' ? 'positive' : feedback.category === 'Above Average' ? 'positive' : 'neutral'}`} style={{ border: '1px solid currentColor' }}>
+                                        <div className="feedback-badge-wrapper">
+                                            <span className={`feedback-badge ${feedback.category === 'Exceptional' || feedback.category === 'Above Average' ? 'positive' : feedback.category === 'Needs Attention' ? 'attention' : 'neutral'}`}>
                                                 {feedback.category}: {feedback.message}
                                             </span>
                                         </div>

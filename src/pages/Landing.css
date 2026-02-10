@@ -751,6 +751,28 @@
     }
 }
 
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-base);
+    }
+
+    .hero-badge {
+        font-size: var(--font-size-xs);
+    }
+
+    .antigravity-logo {
+        width: 90px;
+    }
+
+    .section-title {
+        font-size: var(--font-size-2xl);
+    }
+}
+
 /* Trend Label Colors */
 .text-warning {
     color: var(--color-status-change);

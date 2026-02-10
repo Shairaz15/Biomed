@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button, Icon } from "../components/common";
 import { useAuth } from "../contexts/AuthContext";
 import { MAIN_DISCLAIMER } from "../ethics/disclaimer";
-import { DEMO_USER } from "../demo/demoProfile";
 import "./Landing.css";
 
 export function Landing() {
@@ -122,12 +121,6 @@ export function Landing() {
         }
     };
 
-    const handleDemo = () => {
-        sessionStorage.setItem("demoMode", "true");
-        sessionStorage.setItem("demoUserId", DEMO_USER.id);
-        navigate("/dashboard");
-    };
-
     return (
         <div className="landing">
             {/* Background Effects - Aurora mesh */}
@@ -214,9 +207,6 @@ export function Landing() {
                                 disabled={!disclaimerAccepted}
                             >
                                 Start Assessment
-                            </Button>
-                            <Button variant="secondary" size="lg" onClick={handleDemo}>
-                                How It Works
                             </Button>
                         </div>
                     </div>
@@ -327,7 +317,6 @@ export function Landing() {
             {/* Features Section - Bento Grid */}
             <section className="features-section container">
                 <div className="section-header animate-fadeInUp">
-                    <span className="section-badge">Features</span>
                     <h2 className="section-title">
                         Comprehensive <span className="text-gradient">Cognitive</span> Assessment
                     </h2>
@@ -381,6 +370,10 @@ export function Landing() {
                             ~2 min
                         </span>
                     </div>
+                </div>
+
+                <div className="section-header animate-fadeInUp" style={{ marginTop: '1rem' }}>
+                    <span className="section-badge">Features</span>
                 </div>
             </section>
 
