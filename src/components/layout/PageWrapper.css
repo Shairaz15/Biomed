@@ -176,7 +176,7 @@
         display: none;
     }
 
-    .header-auth {
+    .header-auth .google-signin-container {
         display: none;
     }
 
