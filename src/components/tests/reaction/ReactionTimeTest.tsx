@@ -384,7 +384,7 @@ export function ReactionTimeTest() {
                                             View Dashboard
                                         </Button>
                                         <Button variant="secondary" size="lg" onClick={() => navigate("/tests")}>
-                                            Retry
+                                            Back to Assessments
                                         </Button>
                                     </div>
                                 </div>

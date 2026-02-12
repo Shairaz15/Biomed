@@ -746,9 +746,16 @@
         grid-template-columns: 1fr;
     }
 
-    .features-section,
+    .features-section {
+        padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-sm);
+    }
+
     .trust-section {
-        padding: var(--spacing-2xl) var(--spacing-md);
+        padding: var(--spacing-sm) var(--spacing-md) var(--spacing-2xl);
+    }
+
+    .section-header {
+        margin-bottom: var(--spacing-lg);
     }
 }
 
