@@ -109,6 +109,20 @@ export function ReactionTimeTest() {
         }
     }, [state, roundIndex, config]);
 
+    // Spacebar support for desktop/laptop
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.code === "Space" || e.key === " ") {
+                e.preventDefault();
+                if (["wait", "calibration", "stimulus"].includes(state)) {
+                    handleClick();
+                }
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [state, handleClick]);
+
     // Handle timeout (no response)
     const handleTimeout = useCallback(() => {
         const isCalibration = isCalibrationRound(roundIndex, config);
@@ -242,7 +256,7 @@ export function ReactionTimeTest() {
                                     </div>
                                     <div className="instruction-item">
                                         <span className="instruction-number">2</span>
-                                        <span className="instruction-text">Click or tap as quickly as possible when it does</span>
+                                        <span className="instruction-text">Click, tap, or press spacebar as quickly as possible when it does</span>
                                     </div>
                                     <div className="instruction-item">
                                         <span className="instruction-number">3</span>
@@ -376,7 +390,7 @@ export function ReactionTimeTest() {
 
                         {/* Tap area hint */}
                         {["wait", "calibration", "stimulus"].includes(state) && (
-                            <p className="tap-hint">Click or tap anywhere to respond</p>
+                            <p className="tap-hint">Click, tap, or press spacebar to respond</p>
                         )}
                     </div>
                 </div>
